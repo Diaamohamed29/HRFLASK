@@ -2,8 +2,6 @@
 
 {% block content %}
 
-
-
 <style>
     body {
         background-color: #f5f5f5;
@@ -18,109 +16,122 @@
 
     .logo {
         width: 200px;
-        height: auto;
-    }
-
-    .welcome-text {
-        font-size: 36px;
-        color: #333;
-        margin-top: 30px;
-    }
-
-    .cardBox {
-        display: flex;
-        flex-wrap: wrap;
+        height: 200px;
         justify-content: center;
-        gap: 20px;
-        margin-top: 50px;
-        padding: 20px;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
     }
 
     .card {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border-radius: 20px;
+        width: 500px; /* Adjust the width here */
         background-color: #fff;
+        border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         padding: 30px;
+    }
+
+    .card-title {
+        color: #333;
         text-align: center;
-        transition: all 0.3s ease;
-        width: 300px;
-        height: 400px;
     }
 
-    .card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    .form-group {
+        margin-bottom: 20px;
     }
 
-    .cardName {
-        color: #007bff;
-        font-weight: bold;
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-
-    .numbers {
-        color: #555;
-        font-size: 20px;
-    }
-
-    .logout-btn {
-        font-size: 20px;
-        margin-top: 50px;
-        background-color: #dc3545;
-        border-color: #dc3545;
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 5px;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-    }
-
-    .logout-btn:hover {
-        background-color: #c82333;
-        border-color: #bd2130;
-    }
-
-    /* Table styles */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 30px;
-    }
-
-    th, td , tr {
-        padding: 15px; /* Increased padding for better spacing */
-        text-align: center;
-        border-bottom: 1px solid #ddd;
-        font-size: 20px; /* Increased font size */
-        font-weight: bold; /* Bold font weight */
-    }
-
-    th {
+    .input-group-text {
         background-color: #007bff;
         color: #fff;
-        font-size: 18px;
-        text-transform: uppercase;
-        font-weight: bold;
     }
 
-    tbody tr:nth-child(even) {
-        background-color: #f2f2f2;
+    .btn {
+        width: 100%;
     }
 
-    tbody tr:hover {
-        background-color: #ddd; /* Highlight row on hover */
-    }
-
+   
 </style>
-<div class="container text-center logo-container">
+
+<div class="container">
     <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
-    <!-- <h1 class="welcome-text">Welcome {{name[0][0]}}</h1> -->
+    <div class="card">
+        <h4 class="card-title">طلب اجازة</h4>
+        <form>
+            <div class="form-group input-group">
+                <label for="vactype" class="input-group-prepend mr-3" style="width: 100px;">نوع الاجازة:</label>
+                <select id="daysSelect" name="daysSelect" class="form-control">
+                    <option value="normal">اعتيادي</option>
+                    <option value="casual">عارضة</option>
+                    </select>
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <label for="employeeID" class="input-group-prepend mr-3" style="width: 100px;">الرقم الوظيفي:</label>
+                <input id="employeeID" name="employeeID" class="form-control" type="text" value="{{username}}">
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <label for="employeeName" class="input-group-prepend mr-3" style="width: 100px;">الاسم:</label>
+                <input id="employeeName" name="employeeName" class="form-control" type="text" value="{{name[0][0]}}">
+            </div> <!-- form-group// -->
+
+            <div class="form-group input-group">
+                <label for="jobRole" class="input-group-prepend mr-3" style="width: 100px;">الوظيفة:</label>
+                <input id="jobRole" name="jobRole" class="form-control" type="text" value="{{job_role[0][0]}}">
+            </div> <!-- form-group// -->
+            
+            <div class="form-group input-group">
+                <label for="date" class="mr-3" style="width: 100px;">التاريخ:</label>
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-calendar"></i> </span>
+                </div>
+                <input id="date" name="date" class="form-control" type="date">
+            </div> <!-- form-group// -->
+            
+            <div class="form-group input-group">
+                <label for="daysSelect" class="mr-3" style="width: 100px;">عدد الايام:</label>
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-clock"></i> </span>
+                </div>
+                <select id="daysSelect" name="daysSelect" class="form-control">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+            </div> <!-- form-group// -->
+
+            <div class="form-group input-group">
+                <label for="fromDate" class="mr-3" style="width: 100px;">من تاريخ:</label>
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-clock"></i> </span>
+                </div>
+                <input id="fromDate" name="fromDate" class="form-control" type="date">
+            </div> <!-- form-group// -->
+
+            <div class="form-group input-group">
+                <label for="toDate" class="mr-3" style="width: 100px;">الي تاريخ:</label>
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-clock"></i> </span>
+                </div>
+                <input id="toDate" name="toDate" class="form-control" type="date">
+            </div> <!-- form-group// -->
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-success btn-block">اضافة</button>
+            </div> <!-- form-group// -->
+        </form>
+    </div>
 </div>
 
-
+<div class="text-right mt-5 pr-4">
+    <a href="" class="btn-1 btn-danger">رجوع</a>
+</div>
 
 {% endblock content %}

@@ -156,7 +156,7 @@
             <div class="numbers"> {{total_days[0][0]}}</div>
         </div>
        
-        <a href="view_vacation">
+        <a href="add_vacation">
         <div class="card">
             <div class="iconBx">
                 <ion-icon name="airplane" style="font-size: 36px; color: #007bff;"></ion-icon>
@@ -165,6 +165,38 @@
             <div class="numbers"> </div>
         </div>
     </a>
+</div>
+<div class="attendance-user text-center">
+    <div class="all-attendance-user text-center mt-5" style="font-size: 30px;">
+        {% if results %}
+            <table id="attendanceTable">
+                <thead>
+                    <tr>
+                        <th>الرقم الوظيفي</th>
+                        <th>التاريخ</th>
+                        <th>من</th>
+                        <th>الي</th>
+                        <th>عدد الايام</th>
+                        <th>نوع الاجازة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in results %}
+                        <tr>
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1] }}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>{{ row[3] }}</td>
+                            <td>{{ row[4] }}</td>
+                            <td>{{ row[5] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>لا توجد اجازات الشهر الحالي</p>
+        {% endif %}
+    </div>
 </div>
 
 

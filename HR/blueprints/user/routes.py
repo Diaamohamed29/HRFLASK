@@ -132,7 +132,11 @@ def vacations():
     casual_days = cursor.fetchall()
     cursor.execute(""" select total_days from vacations where employe_id = ? """,(username))
     total_days = cursor.fetchall()
-    return render_template('user/vacations.html',name=name,username=username,normal_days=normal_days,casual_days=casual_days,total_days=total_days)
+    cursor.execute(""" select employe_id , date , from_date , to_date ,
+                    no_of_days , vac_type from vacation_requests where employe_id = ?""",(username))
+    results = cursor.fetchall()
+    return render_template('user/vacations.html',name=name,username=username,normal_days=normal_days,
+                           casual_days=casual_days,total_days=total_days,results=results)
     
 
 
@@ -142,7 +146,9 @@ def add_vacation():
     username = session['username']
     cursor.execute("select name from employes where employe_id = ?",(username))
     name = cursor.fetchall()
-    return render_template('user/add_vacation.html',name=name,username=username)
+    cursor.execute("Select job_role from employes where employe_id = ?" ,(username))
+    job_role = cursor.fetchall()
+    return render_template('user/add_vacation.html',name=name,username=username,job_role=job_role)
 
 
 

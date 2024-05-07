@@ -1,5 +1,6 @@
 from flask import request , render_template , redirect , url_for , Blueprint,session
 from HR.blueprints.user.routes import user
+from HR.blueprints.admin.routes import admin
 from HR.db import connection,cursor
 auth = Blueprint("auth", __name__, template_folder="templates")
 
@@ -21,14 +22,19 @@ def login():
             query = "SELECT * FROM user_ WHERE username = ? AND password = ?"
             cursor.execute(query, (username, password))
             account = cursor.fetchone()
-            username_t = account[0]
-            password_t = account[1]
+            
+            print(account)
+        
             if account :
-                session['username'] = username
+                session['username']=username 
+                session['password']=password
+                print(username) 
+                print(password)
+                session['username'] == username and session['password'] == password
                 return redirect(url_for('user.index'))
-            if username_t == 'admin' and password =='admin':
-                pass
-            if username_t =='super' and password =='super':
+            if session['username'] == 'admin' and password =='admin':
+                return redirect(url_for('admin.index'))
+            if session['username'] =='super' and password =='super':
                 pass 
 
          
