@@ -1,1 +1,207 @@
-<h1>This is admin page</h1>
+{% extends 'base.html'%}
+
+
+
+{% block content %}
+
+
+<!-- Custom CSS -->
+<style>
+    .swiper-container {
+        width: 100%;
+        height: 800px;
+        margin-bottom: 50px;
+        position: relative;
+    }
+
+    .swiper-slide {
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .swiper-slide::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        opacity: 0;
+    }
+
+    .swiper-slide:hover::after {
+        opacity: 1;
+    }
+
+    .swiper-slide img {
+        max-width: 100%;
+        height: auto;
+        transition: transform 0.3s ease;
+    }
+
+    .swiper-slide:hover img {
+        transform: scale(1.05);
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+        color: #fff;
+        font-size: 24px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .swiper-button-next:hover,
+    .swiper-button-prev:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .swiper-button-next {
+        right: 10px;
+    }
+
+    .swiper-button-prev {
+        left: 10px;
+    }
+
+    .swiper-pagination {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .swiper-pagination-bullet {
+        width: 8px;
+        height: 8px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        margin: 0 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .swiper-pagination-bullet:hover {
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .swiper-pagination-bullet-active {
+        background-color: rgba(255, 255, 255, 1);
+    }
+</style>
+<!-- Logo Section -->
+<div class="container text-center logo-container">
+    <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
+<h1 style="margin-bottom:30px"></h1>
+</div>
+
+<!-- Cards Section -->
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <a href="" class="card-link">
+                <div class="card rounded-card">
+                    <img src="{{ url_for('static', filename='imgs/e.jpg') }}" alt="Logo" class="logo mb-2">
+                    <div class="card-body">
+                        <h5 class="card-title">الموظفين</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="" class="card-link">
+              <div class="card rounded-card">
+                  <img src="{{ url_for('static', filename='imgs/f.jpg') }}" alt="Logo" class="logo mb-2">
+                  <div class="card-body">
+                      <h5 class="card-title">حضور وانصراف</h5>
+                  </div>
+              </div>
+          </a>
+      </div>
+      <div class="swiper-slide">
+        <a href="" class="card-link">
+            <div class="card rounded-card">
+                <img src="{{ url_for('static', filename='imgs/2.jpg') }}" alt="Logo" class="logo mb-2">
+                <div class="card-body">
+                    <h5 class="card-title">اجازات</h5>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="swiper-slide">
+      <a href="" class="card-link">
+          <div class="card rounded-card">
+              <img src="{{ url_for('static', filename='imgs/2.jpg') }}" alt="Logo" class="logo mb-2">
+              <div class="card-body">
+                  <h5 class="card-title">مأموريات</h5>
+              </div>
+          </div>
+      </a>
+  </div>
+  <div class="swiper-slide">
+    <a href="" class="card-link">
+        <div class="card rounded-card">
+            <img src="{{ url_for('static', filename='imgs/2.jpg') }}" alt="Logo" class="logo mb-2">
+            <div class="card-body">
+                <h5 class="card-title">تقارير</h5>
+            </div>
+        </div>
+    </a>
+</div>
+<div class="swiper-slide">
+  <a href="" class="card-link">
+      <div class="card rounded-card">
+          <img src="{{ url_for('static', filename='imgs/1.jpg') }}" alt="Logo" class="logo mb-2">
+          <div class="card-body">
+              <h5 class="card-title">بنزين</h5>
+          </div>
+      </div>
+  </a>
+</div>
+<div class="swiper-slide">
+  <a href="" class="card-link">
+      <div class="card rounded-card">
+          <img src="{{ url_for('static', filename='imgs/2.jpg') }}" alt="Logo" class="logo mb-2">
+          <div class="card-body">
+              <h5 class="card-title">مرتبات</h5>
+          </div>
+      </div>
+  </a>
+</div>
+        <!-- Repeat the above structure for other cards -->
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+</div>
+
+
+
+<!-- Logout button -->
+<div class="text-right mt-5 pr-4">
+    <a href="" class="btn btn-danger" style="margin-top: 60px;">تسجيل الخروج</a>
+</div>
+
+
+{% endblock content %}
+
+
+
+ 

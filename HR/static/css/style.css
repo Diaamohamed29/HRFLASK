@@ -43,7 +43,7 @@ body {
   }
   
   .swiper-container {
-    max-width: 600px; /* Adjust this value as needed */
+    max-width: 1000px; /* Adjust this value as needed */
     margin: 0 auto; /* Center the container horizontally */
   }
   

@@ -24,18 +24,22 @@ def login():
             account = cursor.fetchone()
             
             print(account)
-        
-            if account :
-                session['username']=username 
-                session['password']=password
-                print(username) 
-                print(password)
-                session['username'] == username and session['password'] == password
-                return redirect(url_for('user.index'))
-            if session['username'] == 'admin' and password =='admin':
+
+            if account[0] == 'admin' and account[1] =='admin':
                 return redirect(url_for('admin.index'))
-            if session['username'] =='super' and password =='super':
-                pass 
+            # print(account)
+        
+            # if account :
+            #     session['username']=username 
+            #     session['password']=password
+            #     print(username) 
+            #     print(password)
+            #     session['username'] == username and session['password'] == password
+            #     return redirect(url_for('user.index'))
+            # if username == 'admin' and password =='admin':
+            #     return redirect(url_for('admin.index'))
+            # if session['username'] =='super' and password =='super':
+            #     pass 
 
          
     return render_template('auth/login.html')
