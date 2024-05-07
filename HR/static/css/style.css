@@ -1,0 +1,190 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .logo-container {
+    margin-top: 50px;
+  }
+  .logo-container h1{
+    font-size: 50px;
+    color:#342b71;
+  }
+  
+  .cards-container {
+    margin-top: 50px;
+  }
+  
+  .card {
+    border-radius: 150px; /* Adjust as needed */
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+    border: 2px solid transparent; /* Initial border color */
+    background-color: burlywood;
+  }
+  
+  .card:hover {
+    transform: scale(1.05); /* Adjust as needed */
+    border-color: orange; /* Change border color on hover */
+    background-color: #fff; /* Change background color on hover */
+  }
+  
+  .card-link {
+    text-decoration: none; /* Remove underline from the link */
+  }
+  
+  .card-title {
+    text-align: center;
+    margin-top: 10px; /* Adjust spacing */
+    color: #333433; /* Text color */
+    font-size: 18px; /* Font size */
+  }
+  
+  .swiper-container {
+    max-width: 600px; /* Adjust this value as needed */
+    margin: 0 auto; /* Center the container horizontally */
+  }
+  
+
+
+
+
+  .cardBox {
+    position: relative;
+    width: 100%;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 30px;
+  }
+  
+  .cardBox .card {
+    position: relative;
+    background: var(--white);
+    padding: 30px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    box-shadow: 0 7px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  .cardBox .card .numbers {
+    position: relative;
+    font-weight: 500;
+    font-size: 1.4rem;
+    color:grey;
+    text-align: center;
+  }
+  
+  .cardBox .card .cardName {
+    color: #342b71;
+    font-size: 2.5rem;
+    margin-top: 5px;
+    text-align: center;
+  }
+  
+  .cardBox .card .iconBx {
+    font-size: 3.5rem;
+    color: var(--black2);
+  }
+  
+  .cardBox .card:hover {
+    background: var(--blue);
+  }
+  .cardBox .card:hover .numbers,
+  .cardBox .card:hover .cardName,
+  .cardBox .card:hover .iconBx {
+    color: var(--white);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* .attendance-user .all-attendance-user table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 100px 0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  } */
+  /* .attendance-user .all-attendance-user table th,td{
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-family: 'Verdana', sans-serif; 
+   
+  }
+  .attendance-user .all-attendance-user table th{
+    background-color:#342b71;
+    color: #fff;
+    font-size: medium;
+    font-weight:bold;
+  }
+  .attendance-user .all-attendance-user table tr{
+    font-weight:bold;
+  }
+  .attendance-user .all-attendance-user table tr:hover{
+    background: #342b71;
+    color: var(--white);
+    font-weight: bolder;
+  }
+  
+  .attendance-user .all-attendance-user table td{
+    font-size:medium;
+  }
+  
+  .attendance-container-user {
+    
+    width:auto;
+    background-color: #fff;
+    padding: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    margin: 10px;
+    border-radius: 10px;
+  }
+  
+  .all-attendance-user .btn{
+    padding:10px;
+  } 
+ */
+
