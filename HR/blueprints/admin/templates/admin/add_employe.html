@@ -1,0 +1,158 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<style>
+    body {
+        background-color: #c1cc99;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .card {
+        background-color: #c1cc99; /* Lighter background color for the form */
+        border: none; /* Remove default border */
+        box-shadow: 0 0 40px rgba(0,0,0,0.1); /* Add shadow for depth */
+        border-radius:50px; /* Add border radius for rounded corners */
+    }
+
+    .card-title {
+        color: #333; /* Set color for the card title */
+    }
+
+    .form-control {
+        background-color: #fff; /* Set background color for form inputs */
+        border: none; /* Remove default input border */
+        border-radius: 5px; /* Add border radius for rounded corners */
+        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Add shadow for depth */
+    }
+
+    .btn {
+        background-color: #dc3545; /* Set background color for buttons */
+        color: #fff; /* Set text color for buttons */
+        border: none; /* Remove default button border */
+        border-radius: 5px; /* Add border radius for rounded corners */
+        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Add shadow for depth */
+    }
+
+    .btn:hover {
+        background-color: #c82333; /* Darker color on hover */
+    }
+
+</style>
+
+<!-- Logo Section -->
+<div class=" text-center logo-container">
+    <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
+    <h1 style="margin-bottom:30px"></h1>
+</div>
+
+<div class="container">
+
+    
+    
+    
+    
+    <div class="card ">
+    <article class="card-body mx-auto" style="max-width: 400px;">
+        <h4 class="card-title mt-3 text-center">اضافة موظف</h4>
+      
+        <form>
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+             </div>
+            <input name="" class="form-control" placeholder="الرقم الوظيفي" type="text">
+        </div> <!-- form-group// -->
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+             </div>
+            <input name="" class="form-control" placeholder="الاسم" type="email">
+        </div> <!-- form-group// -->
+
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+            </div>
+            <input class="form-control" placeholder="الوظيفة" type="password">
+        </div> <!-- form-group// -->
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+            </div>
+            <input class="form-control" placeholder="القسم" type="password">
+        </div> <!-- form-group// -->
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+            </div>
+            <input class="form-control" placeholder="صافي المرتب" type="password">
+        </div> <!-- form-group// -->                                      
+        
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+            </div>
+            <input class="form-control" placeholder="بدلات" type="password">
+        </div> <!-- form-group// -->          
+        
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+            </div>
+            <select class="custom-select" style="max-width: 120px;">
+                <option selected="">010</option>
+                <option value="1">011</option>
+                <option value="2">012</option>
+                <option value="3">015</option>
+            </select>
+            <input name="" class="form-control" placeholder="رقم التليفون" type="text">
+        </div> <!-- form-group// -->
+
+
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+            </div>
+            <input class="form-control" placeholder="المؤهل الدراسي" type="password">
+        </div> <!-- form-group// -->    
+        
+                <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+            </div>
+            <input class="form-control" placeholder="الرقم القومي" type="password">
+        </div> <!-- form-group// -->    
+
+
+
+
+
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+            </div>
+            <input class="form-control" placeholder="العنوان" type="password">
+        </div> <!-- form-group// -->    
+        
+        
+        
+        
+        
+        <div class="form-group">
+            <button type="submit" class="btn btn-success btn-block"> Add  </button>
+        </div> <!-- form-group// -->      
+                                                                     
+    </form>
+
+    </article>
+
+
+    <div class="text-right mt-5 pr-3">
+        <a href="" class="btn btn-danger">رجوع</a>
+    </div>
+
+
+
+{% endblock content %}

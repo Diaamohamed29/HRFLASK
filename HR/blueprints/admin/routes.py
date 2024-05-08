@@ -102,12 +102,28 @@ def attendance():
 @admin.route('/vacations')
 def vacations():
     return render_template('admin/vacations.html')
+
+@admin.route('/vacation_requests')
+def vacation_requests():
+    return render_template('admin/vacation_requests.html')
+
+
 @admin.route('/all_vacations')
 def all_vacations():
-    return render_template('admin/all_vacations.html')
+    cursor.execute("""
+            select * from vacations
+        """)
+    results = cursor.fetchall()
+    return render_template('admin/all_vacations.html',results=results)
+
+
+
 @admin.route('/add_vacation')
 def add_vacation():
     return render_template('admin/add_vacation.html')
+
+
+
 ### END VACATIONS PAGE ###
 
 
