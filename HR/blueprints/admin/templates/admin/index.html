@@ -1,207 +1,212 @@
 {% extends 'base.html'%}
 
-
-
 {% block content %}
 
+<!-- Custom CSS -->
 
 <!-- Custom CSS -->
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
+
 <style>
-    .swiper-container {
-        width: 100%;
-        height: 800px;
-        margin-bottom: 50px;
-        position: relative;
-    }
+body {
+  background-color: white;
+  font-family: 'Open Sans', sans-serif;
+}
 
-    .swiper-slide {
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-    }
+.container {
+  position: center;
+  height: 300px;
+  width: 1000px;
+  top: 60px;
+  left: calc(50% - 300px);
+  display: flex;
+}
 
-    .swiper-slide::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
-        pointer-events: none;
-        transition: opacity 0.3s ease;
-        opacity: 0;
-    }
+.admincard {
+    
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  width: 700px;
+  background-color: #f7f7f7; /* Light grey or any other color that complements white */
+  border-radius: 10px;
+  box-shadow: -1rem 0 3rem #000;
+  transition: 0.4s ease-out;
+  position: relative;
+  left: 0px;
+}
 
-    .swiper-slide:hover::after {
-        opacity: 1;
-    }
+.admincard:not(:first-child) {
+    margin-left: -50px;
+}
 
-    .swiper-slide img {
-        max-width: 100%;
-        height: auto;
-        transition: transform 0.3s ease;
-    }
+.admincard:hover {
+  transform: translateY(-20px) scale(1.1);
+  z-index: 1;
+  transition: 0.4s ease-out;
+}
 
-    .swiper-slide:hover img {
-        transform: scale(1.05);
-    }
+.admincard:hover ~ .card {
+  position: relative;
+  left: 50px;
+  transition: 0.4s ease-out;
+}
 
-    .swiper-button-next,
-    .swiper-button-prev {
-        color: #fff;
-        font-size: 24px;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(0, 0, 0, 0.5);
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+.title {
+  color: black;
+  font-weight: 300;
+  position: absolute;
+  left: 20px;
+  top: 15px;
+}
 
-    .swiper-button-next:hover,
-    .swiper-button-prev:hover {
-        background-color: rgba(0, 0, 0, 0.8);
-    }
+.bar {
+  position: absolute;
+  top: 100px;
+  left: 20px;
+  height: 5px;
+  width: 150px;
+}
 
-    .swiper-button-next {
-        right: 10px;
-    }
+.emptybar {
+  background-color: #2e3033;
+  width: 100%;
+  height: 100%;
+}
 
-    .swiper-button-prev {
-        left: 10px;
-    }
+.filledbar {
+  position: absolute;
+  top: 0px;
+  z-index: 3;
+  width: 0px;
+  height: 100%;
+  background: rgb(0,154,217);
+  background: linear-gradient(90deg, rgba(0,154,217,1) 0%, rgba(217,147,0,1) 65%, rgba(255,186,0,1) 100%);
+  transition: 0.6s ease-out;
+}
 
-    .swiper-pagination {
-        position: absolute;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+.admincard:hover .filledbar {
+  width: 120px;
+  transition: 0.4s ease-out;
+}
 
-    .swiper-pagination-bullet {
-        width: 8px;
-        height: 8px;
-        background-color: rgba(255, 255, 255, 0.5);
-        border-radius: 50%;
-        margin: 0 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+.image {
+  width: 150px; /* Adjust image size as needed */
+  height: 150px; /* Adjust image size as needed */
+  border-radius: 50%;
+  overflow: hidden;
+}
 
-    .swiper-pagination-bullet:hover {
-        background-color: rgba(255, 255, 255, 0.8);
-    }
+.image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
 
-    .swiper-pagination-bullet-active {
-        background-color: rgba(255, 255, 255, 1);
-    }
 </style>
+</head>
+
+
 <!-- Logo Section -->
-<div class="container text-center logo-container">
+<div class=" text-center logo-container">
     <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
-<h1 style="margin-bottom:30px"></h1>
+    <h1 style="margin-bottom:30px"></h1>
 </div>
 
-<!-- Cards Section -->
-<div class="swiper-container">
-    <div class="swiper-wrapper">
-        <div class="swiper-slide">
-            <a href="" class="card-link">
-                <div class="card rounded-card">
-                    <img src="{{ url_for('static', filename='imgs/e.jpg') }}" alt="Logo" class="logo mb-2">
-                    <div class="card-body">
-                        <h5 class="card-title">الموظفين</h5>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="" class="card-link">
-              <div class="card rounded-card">
-                  <img src="{{ url_for('static', filename='imgs/f.jpg') }}" alt="Logo" class="logo mb-2">
-                  <div class="card-body">
-                      <h5 class="card-title">حضور وانصراف</h5>
-                  </div>
-              </div>
-          </a>
+
+  <div class="container">
+    <div class="admincard">
+        <a href="employes">
+      <h3 class="title">الموظفين</h3>
+      <div class="bar">
+        <div class="emptybar"></div>
+        <div class="filledbar"></div>
       </div>
-      <div class="swiper-slide">
-        <a href="" class="card-link">
-            <div class="card rounded-card">
-                <img src="{{ url_for('static', filename='imgs/2.jpg') }}" alt="Logo" class="logo mb-2">
-                <div class="card-body">
-                    <h5 class="card-title">اجازات</h5>
-                </div>
-            </div>
+      <div class="image">
+        <img src="{{ url_for('static', filename='imgs/e.jpg') }}" alt="Employee Image">
+      </div>
         </a>
     </div>
-    <div class="swiper-slide">
-      <a href="" class="card-link">
-          <div class="card rounded-card">
-              <img src="{{ url_for('static', filename='imgs/2.jpg') }}" alt="Logo" class="logo mb-2">
-              <div class="card-body">
-                  <h5 class="card-title">مأموريات</h5>
-              </div>
-          </div>
-      </a>
-  </div>
-  <div class="swiper-slide">
-    <a href="" class="card-link">
-        <div class="card rounded-card">
-            <img src="{{ url_for('static', filename='imgs/2.jpg') }}" alt="Logo" class="logo mb-2">
-            <div class="card-body">
-                <h5 class="card-title">تقارير</h5>
-            </div>
-        </div>
+    <!-- Repeat the same structure for other cards -->
+    <div class="admincard">
+      <a href="attendance">
+      <h3 class="title">حضور وانصراف</h3>
+      <div class="bar">
+        <div class="emptybar"></div>
+        <div class="filledbar"></div>
+      </div>
+      <div class="image">
+        <img src="{{ url_for('static', filename='imgs/f.jpg') }}" alt="Attendance Image">
+      </div>
     </a>
-</div>
-<div class="swiper-slide">
-  <a href="" class="card-link">
-      <div class="card rounded-card">
-          <img src="{{ url_for('static', filename='imgs/1.jpg') }}" alt="Logo" class="logo mb-2">
-          <div class="card-body">
-              <h5 class="card-title">بنزين</h5>
-          </div>
-      </div>
-  </a>
-</div>
-<div class="swiper-slide">
-  <a href="" class="card-link">
-      <div class="card rounded-card">
-          <img src="{{ url_for('static', filename='imgs/2.jpg') }}" alt="Logo" class="logo mb-2">
-          <div class="card-body">
-              <h5 class="card-title">مرتبات</h5>
-          </div>
-      </div>
-  </a>
-</div>
-        <!-- Repeat the above structure for other cards -->
     </div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-    <!-- Add Pagination -->
-    <div class="swiper-pagination"></div>
+    <div class="admincard">
+      <a href="vacations">
+      <h3 class="title">اجازات</h3>
+      <div class="bar">
+        <div class="emptybar"></div>
+        <div class="filledbar"></div>
+      </div>
+      <div class="image">
+        <img src="{{ url_for('static', filename='imgs/2.jpg') }}" alt="Vacations Image">
+      </div>
+    </a>
+    </div>
+    <div class="admincard">
+      <h3 class="title">مأموريات</h3>
+      <div class="bar">
+        <div class="emptybar"></div>
+        <div class="filledbar"></div>
+      </div>
+      <div class="image">
+        <img src="{{ url_for('static', filename='imgs/2.jpg') }}" alt="Missions Image">
+      </div>
+    </div>
+    <div class="admincard">
+        <h3 class="title">تقارير</h3>
+        <div class="bar">
+          <div class="emptybar"></div>
+          <div class="filledbar"></div>
+        </div>
+        <div class="image">
+          <img src="{{ url_for('static', filename='imgs/2.jpg') }}" alt="Missions Image">
+        </div>
+      </div>
+      
+      <div class="admincard">
+        <a href="">
+        <h3 class="title">بنزين</h3>
+        <div class="bar">
+          <div class="emptybar"></div>
+          <div class="filledbar"></div>
+        </div>
+        <div class="image">
+          <img src="{{ url_for('static', filename='imgs/1.jpg') }}" alt="Missions Image">
+        </div>
+        </a>
+      </div>
+    
+      <div class="admincard">
+        <h3 class="title">مرتبات</h3>
+        <div class="bar">
+          <div class="emptybar"></div>
+          <div class="filledbar"></div>
+        </div>
+        <div class="image">
+          <img src="{{ url_for('static', filename='imgs/2.jpg') }}" alt="Missions Image">
+        </div>
+      </div>
+      <!-- Logout button -->
+
+  </div>
+<div class="text-right mt-2 pr-8">
+    <a href="" class="btn btn-danger" style="margin-top: 300px;">تسجيل الخروج</a>
 </div>
 
-
-
-<!-- Logout button -->
-<div class="text-right mt-5 pr-4">
-    <a href="" class="btn btn-danger" style="margin-top: 60px;">تسجيل الخروج</a>
-</div>
 
 
 {% endblock content %}
-
-
-
- 

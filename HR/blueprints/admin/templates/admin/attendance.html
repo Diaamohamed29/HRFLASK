@@ -1,0 +1,218 @@
+{% extends 'base.html'%}
+
+{% block content %}
+{% set filename = 'attendance.xlsx' %}
+<head>
+    <style>
+    body {
+        background-color: #f5f5f5;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .logo-container {
+        margin-top: 50px;
+    }
+
+    .logo {
+        width: 200px;
+        height: auto;
+    }
+
+    .welcome-text {
+        font-size: 36px;
+        color: #333;
+        margin-top: 30px;
+    }
+
+
+
+    .attendance-user .all-attendance-user table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 100px 0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .attendance-user .all-attendance-user table th,td{
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-family: 'Verdana', sans-serif; 
+   
+  }
+  .attendance-user .all-attendance-user table th{
+    background-color:#342b71;
+    color: #fff;
+    font-size: medium;
+    font-weight:bold;
+  }
+  .attendance-user .all-attendance-user table tr{
+    font-weight:bold;
+  }
+  .attendance-user .all-attendance-user table tr:hover{
+    background: #342b71;
+    color: var(--white);
+    font-weight: bolder;
+  }
+  
+  .attendance-user .all-attendance-user table td{
+    font-size:medium;
+  }
+  
+  .attendance-container-user {
+    
+    width:auto;
+    background-color: #fff;
+    padding: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    margin: 10px;
+    border-radius: 10px;
+  }
+  
+  .all-attendance-user .btn{
+    padding:10px;
+  } 
+
+
+    .logout-btn {
+        font-size: 20px;
+        margin-top: 50px;
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    /* Table styles */
+    .fixed-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+    }
+
+    th, td , tr {
+        padding: 15px; /* Increased padding for better spacing */
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+        font-size: 20px; /* Increased font size */
+        font-weight: bold; /* Bold font weight */
+    }
+
+    th {
+        background-color: #007bff;
+        color: #fff;
+        font-size: 18px;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tbody tr:hover {
+        background-color: #ddd; /* Highlight row on hover */
+        
+    }
+    .button-container button {
+    margin-right: 10px;}
+    </style>
+</head>
+
+<div class="container text-center logo-container">
+    <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
+
+</div>
+
+
+
+
+
+<div class="attendance-user text-center">
+    <div class="all-attendance-user text-center">
+        <div class="attendance-container-user">
+            <div>
+                <h1>Attendance</h1>
+            </div>
+            <form action="submit_attendance" method="POST" class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="employeid">Select Employe</label>
+                        <select class="form-control" id="employeid" name="employeid">
+                            <option value='all'>All Employes</option>
+                            {% for employee in all_employes %}
+                            <option value="{{ employee }}">{{ employee }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="fromDate">From Date:</label>
+                        <input type="date" class="form-control" id="fromDate" name="fromDate">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="toDate">To Date:</label>
+                        <input type="date" class="form-control" id="toDate" name="toDate">
+                    </div>
+                </div>
+                <div class="col-md-12 button-container">
+                    <button  type="submit" class="btn btn-primary">Submit</button>
+                    <button id="exportBtn" class="btn btn-success">تصدير إلى Excel</button>
+                </div>
+            </form>
+        </div>
+        
+
+        <table class="fixed-table" id="attendancetable">
+            <thead>
+                <tr>
+                    <th >Employe ID</th>
+                    <th>Date</th>
+                    <th>Start</th>
+                    <th>End</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[3] }}</td>
+
+                        <!-- Add more cells based on your table columns -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script>
+            document.getElementById('exportBtn').addEventListener('click', function() {
+                var wb = XLSX.utils.table_to_book(document.getElementById('attendancetable'), {sheet: 'Sheet1'});
+                XLSX.writeFile(wb, "{{ filename }}");
+            });
+</script>
+        
+
+
+
+{% endblock content %}

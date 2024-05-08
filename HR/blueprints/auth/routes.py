@@ -26,6 +26,7 @@ def login():
             print(account)
 
             if account[0] == 'admin' and account[1] =='admin':
+                session['username'] = username
                 return redirect(url_for('admin.index'))
             # print(account)
         
