@@ -1,7 +1,6 @@
 {% extends 'base.html'%}
 
 {% block content %}
-{% set filename = 'attendance.xlsx' %}
 <head>
     <style>
     body {
@@ -130,89 +129,84 @@
     }
     .button-container button {
     margin-right: 10px;}
-    </style>
+</style>
 </head>
 
-<div class="container text-center logo-container">
-    <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
 
+<!-- Logo Section -->
+<div class=" text-center logo-container">
+    <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
+    <h1 style="margin-bottom:30px"></h1>
 </div>
 
-
-
-
-
 <div class="attendance-user text-center">
-    <div class="all-attendance-user text-center">
-        <div class="attendance-container-user">
-            <div>
-                <h1>Attendance</h1>
+<div class="all-attendance-user text-center">
+<div class="attendance-container-user">
+    <div>
+        <h1>مأموريات</h1>
+    </div>
+    <form action="" method="POST" class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="employeid">Select Employe</label>
+                <select class="form-control" id="employeid" name="employeid">
+                    <option value='all'>All Employes</option>
+                    {% for employee in all_employes %}
+                    <option value="{{ employee }}">{{ employee }}</option>
+                    {% endfor %}
+                </select>
             </div>
-            <form action="submit_attendance" method="POST" class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="employeid">Select Employe</label>
-                        <select class="form-control" id="employeid" name="employeid">
-                            <option value='all'>All Employes</option>
-                            {% for employee in all_employes %}
-                            <option value="{{ employee }}">{{ employee }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="fromDate">From Date:</label>
-                        <input type="date" class="form-control" id="fromDate" name="fromDate">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="toDate">To Date:</label>
-                        <input type="date" class="form-control" id="toDate" name="toDate">
-                    </div>
-                </div>
-                <div class="col-md-12 button-container">
-                    <button  type="submit" class="btn btn-primary">Submit</button>
-                    <button id="exportBtn" class="btn btn-success">تصدير إلى Excel</button>
-                </div>
-            </form>
         </div>
-        
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="fromDate">From Date:</label>
+                <input type="date" class="form-control" id="fromDate" name="fromDate">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="toDate">To Date:</label>
+                <input type="date" class="form-control" id="toDate" name="toDate">
+            </div>
+        </div>
+        <div class="col-md-12 button-container">
+            <button  type="submit" class="btn btn-primary">Submit</button>
+            <button id="exportBtn" class="btn btn-success">تصدير إلى Excel</button>
+        </div>
+    </form>
+</div>
 
-        <table class="fixed-table" id="attendancetable">
-            <thead>
-                <tr>
-                    <th >Employe ID</th>
-                    <th>Date</th>
-                    <th>Start</th>
-                    <th>End</th>
+<table class="fixed-table" id="attendancetable">
+    <thead>
+        <tr>
+            <th >Employe ID</th>
+            <th>Date</th>
+            <th>Start</th>
+            <th>End</th>
 
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in results %}
-                    <tr>
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in results %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
 
-                        <!-- Add more cells based on your table columns -->
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                <!-- Add more cells based on your table columns -->
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 <script>
-            document.getElementById('exportBtn').addEventListener('click', function() {
-                var wb = XLSX.utils.table_to_book(document.getElementById('attendancetable'), {sheet: 'Sheet1'});
-                XLSX.writeFile(wb, "{{ filename }}");
-            });
+    document.getElementById('exportBtn').addEventListener('click', function() {
+        var wb = XLSX.utils.table_to_book(document.getElementById('attendancetable'), {sheet: 'Sheet1'});
+        XLSX.writeFile(wb, "{{ filename }}");
+    });
 </script>
-        
-
 
 
 {% endblock content %}

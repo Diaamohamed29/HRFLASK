@@ -4,7 +4,7 @@
 {% set filename = 'employes.xlsx' %}
 <style>
     body {
-        background-color: #c1cc99;
+        background-color: #ffeed6;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         margin: 0;
         padding: 0;
@@ -114,8 +114,6 @@
     }
 
 </style>
-
-    
 <!-- Logo Section -->
 <div class=" text-center logo-container">
     <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
@@ -125,6 +123,19 @@
 
 </div>
 <div class="attendance-user text-center">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% if 'username' in session %}
+            <div id="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endwith %}
     <div class="all-attendance-user text-center">
         <table id="employestable">
             <thead>
@@ -139,9 +150,6 @@
                     <th>رقم التليفون</th>
                     <th>تاريخ التعيين</th>
                     <th>Actions</th>
-
-
-                        
                 </tr>
             </thead>
             <tbody>
@@ -157,7 +165,7 @@
                         <td contenteditable="true">{{ row[7] }}</td>
                         <td contenteditable="true">{{ row[8] }}</td>
                         <td>
-                            <button class="btn btn-danger delete-btn" data-employee-id="{{ row.employe_id }}">Delete</button>
+                            <button class="btn btn-danger delete-btn" data-employee-id="{{ row[0] }}">Delete</button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -166,6 +174,16 @@
     </div>
 </div>
 
+<!-- Form for deleting employee -->
+<form id="deleteForm" action="{{ url_for('admin.delete_employe') }}" method="POST" style="display: none;">
+    <input type="hidden" name="employeeId" value="">
+</form>
+
+<form id="updateForm" action="{{ url_for('admin.update_employe') }}" method="POST" style="display: none;">
+    <input type="hidden" name="employeeId" value="">
+    <input type="hidden" name="cellIndex" value="">
+    <input type="hidden" name="newValue" value="">
+</form>
 <!-- Export button -->
 <div class="text-center mt-5">
     <button id="exportBtn" class="btn btn-success">تصدير إلى Excel</button>
@@ -176,12 +194,65 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 <script>
+        document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            var employeeId = this.getAttribute('data-employee-id');
+            var confirmation = confirm("Are you sure you want to delete this employee?");
+            if (confirmation) {
+                var form = document.getElementById('deleteForm');
+                form.elements['employeeId'].value = employeeId;
+                form.submit();
+            }
+        });
+    });
+    // Enable inline editing for table cells
+    document.querySelectorAll('td[contenteditable=true]').forEach(cell => {
+        cell.addEventListener('click', function() {
+            this.setAttribute('contenteditable', 'true');
+        });
+        cell.addEventListener('blur', function() {
+            this.setAttribute('contenteditable', 'false');
+        });
+        cell.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent the default action of the Enter key
+                this.blur(); // Remove focus from the cell
+                updateCellValue(this); // Call function to update cell value
+            }
+        });
+    });
+
+    // Function to update cell value in the form and submit it
+    function updateCellValue(cell) {
+        var form = document.getElementById('updateForm');
+        var rowIndex = cell.parentNode.rowIndex;
+        var cellIndex = cell.cellIndex;
+        var newValue = cell.textContent;
+        var employeeId = document.querySelectorAll('#employestable tbody tr')[rowIndex - 1].querySelector('td:first-child').textContent;
+
+        // Update the form fields with the new cell value and employee ID
+        form.elements['employeeId'].value = employeeId;
+        form.elements['cellIndex'].value = cellIndex;
+        form.elements['newValue'].value = newValue;
+
+        // Submit the form
+        form.submit();
+    }
+
+    // Export table to Excel
     document.getElementById('exportBtn').addEventListener('click', function() {
         var wb = XLSX.utils.table_to_book(document.getElementById('employestable'), {sheet: 'Sheet1'});
         XLSX.writeFile(wb, "{{ filename }}");
     });
 </script>
 
-
-
+<script>
+    // Automatically remove flash messages after 5 seconds
+    setTimeout(function() {
+        var flashMessages = document.getElementById('flash-messages');
+        if (flashMessages) {
+            flashMessages.parentNode.removeChild(flashMessages);
+        }
+    }, 5000); // 5000 milliseconds = 5 seconds
+</script>
 {% endblock content %}

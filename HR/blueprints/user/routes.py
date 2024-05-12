@@ -1,5 +1,5 @@
-from flask import request , render_template , redirect , url_for , Blueprint,session
-from HR.db import connection , cursor 
+from flask import request , render_template , redirect , url_for , Blueprint,session,flash
+from HR.db import connection , cursor ,connect_to_zkteco
 from datetime import datetime , timedelta
 user = Blueprint("user", __name__, template_folder="templates")
 
@@ -43,6 +43,7 @@ def index():
 
 @user.route('/attendance')
 def attendance():
+    connect_to_zkteco()
     username = session['username']
     
     cursor.execute("SELECT name from employes where employe_id = ?",(username))
@@ -141,33 +142,42 @@ def vacations():
 
 
 
-@user.route('/add_vacation')
+@user.route('/add_vacation',methods=['POST','GET'])
 def add_vacation():
-    username = session['username']
-    cursor.execute("select name from employes where employe_id = ?",(username))
-    name = cursor.fetchall()
-    cursor.execute("Select job_role from employes where employe_id = ?" ,(username))
-    job_role = cursor.fetchall()
-    return render_template('user/add_vacation.html',name=name,username=username,job_role=job_role)
+    if request.method == 'GET':
+        cursor = connection.cursor()
+        username = session['username']
+        cursor.execute("select name from employes where employe_id = ?",(username))
+        name = cursor.fetchall()
+        cursor.execute("Select job_role from employes where employe_id = ?" ,(username))
+        job_role = cursor.fetchall()
+        return render_template('user/add_vacation.html',name=name,username=username,job_role=job_role)
 
+    elif request.method == 'POST':
+        employe_id = request.form.get('employe_id')
+        type = request.form.get('type')
+        name = request.form.get('name')
+        job_role = request.form.get('job_role')
+        date = request.form.get('date')
+        no_of_days = request.form.get('no_of_days')
+        from_date = request.form.get('from_date')
+        to_date = request.form.get('to_date')
+        status = 0 
+          # Here you can insert the vacation request data into your database table
+            # Example code:
+        cursor = connection.cursor()
+        sql = "INSERT INTO vacation_requests (employe_id,name, job_role, vac_type, date, no_of_days, from_date, to_date,status) VALUES (?, ?, ?, ?, ?, ?, ?,?,?)"
+        cursor.execute(sql, (employe_id, name,job_role, type, date, no_of_days, from_date, to_date,status))
+        connection.commit()
+        cursor.execute(""" 
+            update vacation_requests 
+                       set department = (select department from employes where employe_id = vacation_requests.employe_id)
+            """)
+        connection.commit()
+        cursor.close()
 
-
-
-# @user.route('/view_vacations')
-# def view_vacations():
-#     username = session['username']
-#     cursor.execute("select name from employes where employe_id = ?",(username))
-#     name = cursor.fetchall()
-#     return render_template('user/view_vacations.html',name=name,username=username)
-    
-
-
-
-
-
-
-
-
+        flash('Vacation request added successfully!', 'success')
+        return redirect(url_for('user.add_vacation'))
 
 
 

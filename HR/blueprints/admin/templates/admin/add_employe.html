@@ -3,14 +3,14 @@
 {% block content %}
 <style>
     body {
-        background-color: #c1cc99;
+        background-color: #ffeed6;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         margin: 0;
         padding: 0;
     }
 
     .card {
-        background-color: #c1cc99; /* Lighter background color for the form */
+        background-color: #ffeed6; /* Lighter background color for the form */
         border: none; /* Remove default border */
         box-shadow: 0 0 40px rgba(0,0,0,0.1); /* Add shadow for depth */
         border-radius:50px; /* Add border radius for rounded corners */
@@ -57,57 +57,52 @@
     <article class="card-body mx-auto" style="max-width: 400px;">
         <h4 class="card-title mt-3 text-center">اضافة موظف</h4>
       
-        <form>
+    <form action="{{ url_for('admin.add_employe') }}" method="POST">
         <div class="form-group input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-user"></i> </span>
              </div>
-            <input name="" class="form-control" placeholder="الرقم الوظيفي" type="text">
+            <input name="employeid" class="form-control" placeholder="الرقم الوظيفي" type="text">
         </div> <!-- form-group// -->
         <div class="form-group input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
              </div>
-            <input name="" class="form-control" placeholder="الاسم" type="email">
+            <input name="name" class="form-control" placeholder="الاسم" type="text">
         </div> <!-- form-group// -->
 
         <div class="form-group input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
             </div>
-            <input class="form-control" placeholder="الوظيفة" type="password">
+            <input name ='job_role' class="form-control" placeholder="الوظيفة" type="text">
         </div> <!-- form-group// -->
         <div class="form-group input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
             </div>
-            <input class="form-control" placeholder="القسم" type="password">
+            <input name ='department' class="form-control" placeholder="القسم" type="text">
         </div> <!-- form-group// -->
         <div class="form-group input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
             </div>
-            <input class="form-control" placeholder="صافي المرتب" type="password">
+            <input name ='net_salary' class="form-control" placeholder="صافي المرتب" type="text">
         </div> <!-- form-group// -->                                      
         
         <div class="form-group input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
             </div>
-            <input class="form-control" placeholder="بدلات" type="password">
+            <input name ='allowance' class="form-control" placeholder="بدلات" type="text">
         </div> <!-- form-group// -->          
         
         <div class="form-group input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
             </div>
-            <select class="custom-select" style="max-width: 120px;">
-                <option selected="">010</option>
-                <option value="1">011</option>
-                <option value="2">012</option>
-                <option value="3">015</option>
-            </select>
-            <input name="" class="form-control" placeholder="رقم التليفون" type="text">
+        
+            <input name="telephone" class="form-control" placeholder="رقم التليفون" type="text">
         </div> <!-- form-group// -->
 
 
@@ -115,14 +110,14 @@
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
             </div>
-            <input class="form-control" placeholder="المؤهل الدراسي" type="password">
+            <input name ='qualification' class="form-control" placeholder="المؤهل الدراسي" type="text">
         </div> <!-- form-group// -->    
         
                 <div class="form-group input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
             </div>
-            <input class="form-control" placeholder="الرقم القومي" type="password">
+            <input name ='national_id'class="form-control" placeholder="الرقم القومي" type="text">
         </div> <!-- form-group// -->    
 
 
@@ -133,7 +128,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
             </div>
-            <input class="form-control" placeholder="العنوان" type="password">
+            <input name ='address' class="form-control" placeholder="العنوان" type="text">
         </div> <!-- form-group// -->    
         
         
@@ -150,9 +145,32 @@
 
 
     <div class="text-right mt-5 pr-3">
-        <a href="" class="btn btn-danger">رجوع</a>
+        <a href="{{url_for('admin.employes')}}" class="btn btn-danger">رجوع</a>
     </div>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% if 'username' in session and request.path == url_for('admin.add_employe') %}
+            <div id="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endwith %}
+
+<script>
+    // Automatically remove flash messages after 5 seconds
+    setTimeout(function() {
+        var flashMessages = document.getElementById('flash-messages');
+        if (flashMessages) {
+            flashMessages.parentNode.removeChild(flashMessages);
+        }
+    }, 5000); // 5000 milliseconds = 5 seconds
+</script>
 
 
 {% endblock content %}

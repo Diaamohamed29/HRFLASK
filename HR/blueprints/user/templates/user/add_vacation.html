@@ -3,8 +3,8 @@
 {% block content %}
 
 <style>
-    body {
-        background-color: #f5f5f5;
+        body {
+        background-color:  #ffeed6;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         margin: 0;
         padding: 0;
@@ -30,7 +30,7 @@
 
     .card {
         width: 500px; /* Adjust the width here */
-        background-color: #fff;
+        background-color: #ffeed6;;
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         padding: 30px;
@@ -61,26 +61,26 @@
     <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
     <div class="card">
         <h4 class="card-title">طلب اجازة</h4>
-        <form>
+        <form action="{{ url_for('user.add_vacation') }}" method="POST">
             <div class="form-group input-group">
                 <label for="vactype" class="input-group-prepend mr-3" style="width: 100px;">نوع الاجازة:</label>
-                <select id="daysSelect" name="daysSelect" class="form-control">
+                <select id="type" name="type" class="form-control">
                     <option value="normal">اعتيادي</option>
                     <option value="casual">عارضة</option>
                     </select>
             </div> <!-- form-group// -->
             <div class="form-group input-group">
-                <label for="employeeID" class="input-group-prepend mr-3" style="width: 100px;">الرقم الوظيفي:</label>
-                <input id="employeeID" name="employeeID" class="form-control" type="text" value="{{username}}">
+                <label for="employe_id" class="input-group-prepend mr-3" style="width: 100px;">الرقم الوظيفي:</label>
+                <input id="employe_id" name="employe_id" class="form-control" type="text" value="{{username}}">
             </div> <!-- form-group// -->
             <div class="form-group input-group">
-                <label for="employeeName" class="input-group-prepend mr-3" style="width: 100px;">الاسم:</label>
-                <input id="employeeName" name="employeeName" class="form-control" type="text" value="{{name[0][0]}}">
+                <label for="name" class="input-group-prepend mr-3" style="width: 100px;">الاسم:</label>
+                <input id="name" name="name" class="form-control" type="text" value="{{name[0][0]}}">
             </div> <!-- form-group// -->
 
             <div class="form-group input-group">
-                <label for="jobRole" class="input-group-prepend mr-3" style="width: 100px;">الوظيفة:</label>
-                <input id="jobRole" name="jobRole" class="form-control" type="text" value="{{job_role[0][0]}}">
+                <label for="job_role" class="input-group-prepend mr-3" style="width: 100px;">الوظيفة:</label>
+                <input id="job_role" name="job_role" class="form-control" type="text" value="{{job_role[0][0]}}">
             </div> <!-- form-group// -->
             
             <div class="form-group input-group">
@@ -96,7 +96,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"> <i class="fa fa-clock"></i> </span>
                 </div>
-                <select id="daysSelect" name="daysSelect" class="form-control">
+                <select id="no_of_days" name="no_of_days" class="form-control">
+                    <option value="0.5">0.5</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -108,19 +109,19 @@
             </div> <!-- form-group// -->
 
             <div class="form-group input-group">
-                <label for="fromDate" class="mr-3" style="width: 100px;">من تاريخ:</label>
+                <label for="from_date" class="mr-3" style="width: 100px;">من تاريخ:</label>
                 <div class="input-group-prepend">
                     <span class="input-group-text"> <i class="fa fa-clock"></i> </span>
                 </div>
-                <input id="fromDate" name="fromDate" class="form-control" type="date">
+                <input id="from_date" name="from_date" class="form-control" type="date">
             </div> <!-- form-group// -->
 
             <div class="form-group input-group">
-                <label for="toDate" class="mr-3" style="width: 100px;">الي تاريخ:</label>
+                <label for="to_date" class="mr-3" style="width: 100px;">الي تاريخ:</label>
                 <div class="input-group-prepend">
                     <span class="input-group-text"> <i class="fa fa-clock"></i> </span>
                 </div>
-                <input id="toDate" name="toDate" class="form-control" type="date">
+                <input id="to_date" name="to_date" class="form-control" type="date">
             </div> <!-- form-group// -->
 
             <div class="form-group">
@@ -128,10 +129,33 @@
             </div> <!-- form-group// -->
         </form>
     </div>
+    <div class="text-right mt-5">
+        <a href="{{url_for('user.vacations')}}">
+        <button class="btn btn-danger">رجوع</button></a>
+    </div>
 </div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% if 'username' in session and request.path == url_for('user.add_vacation') %}
+            <div id="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endwith %}
 
-<div class="text-right mt-5 pr-4">
-    <a href="" class="btn-1 btn-danger">رجوع</a>
-</div>
-
+<script>
+    // Automatically remove flash messages after 5 seconds
+    setTimeout(function() {
+        var flashMessages = document.getElementById('flash-messages');
+        if (flashMessages) {
+            flashMessages.parentNode.removeChild(flashMessages);
+        }
+    }, 5000); // 5000 milliseconds = 5 seconds
+</script>
+    </script>
 {% endblock content %}

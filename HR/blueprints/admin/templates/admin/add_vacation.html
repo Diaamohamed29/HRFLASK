@@ -1,6 +1,48 @@
 {% extends 'base.html'%}
 
 {% block content %}
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
+
+<style>
+    body {
+        background-color: #ffeed6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .card {
+        background-color: #ffeed6; /* Lighter background color for the form */
+        border: none; /* Remove default border */
+        box-shadow: 0 0 40px rgba(0,0,0,0.1); /* Add shadow for depth */
+        border-radius:50px; /* Add border radius for rounded corners */
+    }
+
+    .card-title {
+        color: #333; /* Set color for the card title */
+    }
+
+    .form-control {
+        background-color: #fff; /* Set background color for form inputs */
+        border: none; /* Remove default input border */
+        border-radius: 5px; /* Add border radius for rounded corners */
+        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Add shadow for depth */
+    }
+
+    .btn {
+        background-color: #dc3545; /* Set background color for buttons */
+        color: #fff; /* Set text color for buttons */
+        border: none; /* Remove default button border */
+        border-radius: 5px; /* Add border radius for rounded corners */
+        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Add shadow for depth */
+    }
+
+    .btn:hover {
+        background-color: #c82333; /* Darker color on hover */
+    }
+</style>
+</head>
 
 
 <!-- Logo Section -->
@@ -10,5 +52,129 @@
 </div>
 
 
+
+<div class="container">
+    <div class="card ">
+        <article class="card-body mx-auto" style="max-width: 400px;">
+            <h4 class="card-title mt-3 text-center">طلب اجازة</h4>
+            <form action="{{ url_for('admin.add_vacation') }}" method="POST">
+       
+                
+                <div class="form-group input-group">
+                    <label for="employe_id" class="input-group-prepend mr-3" style="width: 100px;">الرقم الوظيفي:</label>
+                    <select class="form-control" id="employe_id" name="employe_id">
+                        {% for employee in all_employes %}
+                            <option value="{{ employee }}">{{ employee }}</option>
+                        {% endfor %}
+                    </select>                
+                </div> 
+                    <!-- form-group// -->
+
+                <div class="form-group input-group">
+                    <label for="job_role" class="input-group-prepend mr-3" style="width: 100px;">الوظيفة:</label>
+                    <select class="form-control" id="job_role" name="job_role">
+                        
+                            {% for job_role in job_roles %}
+                            <option value="{{ job_role[0] }}">{{ job_role }}</option>
+                        {% endfor %}
+                    </select>                 
+                </div> 
+                <!-- form-group// -->
+
+
+
+                <div class="form-group input-group">
+                    <label for="type" class="input-group-prepend mr-3" style="width: 100px;">النوع:</label>
+                    <select class="form-control" id="type" name="type">
+                        <option value='normal'>اعتيادي</option>
+                        
+                        <option value="casual">عارضة</option>
+                        
+                    </select>                 
+                </div> 
+                <!-- form-group// -->
+
+
+
+                <div class="form-group input-group">
+                    <label for="date" class="mr-3" style="width: 100px;">التاريخ:</label>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-calendar"></i> </span>
+                    </div>
+                    <input id="date" name="date" class="form-control" type="date">
+                </div> <!-- form-group// -->
+                
+                <div class="form-group input-group">
+                    <label for="no_of_days" class="mr-3" style="width: 100px;">عدد الايام:</label>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-clock"></i> </span>
+                    </div>
+                    <select id="no_of_days" name="no_of_days" class="form-control">
+                        <option value="0.5">0.5</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                    </select>
+                </div> <!-- form-group// -->
+
+                <div class="form-group input-group">
+                    <label for="from_date" class="mr-3" style="width: 100px;">من تاريخ:</label>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-clock"></i> </span>
+                    </div>
+                    <input id="from_date" name="from_date" class="form-control" type="date">
+                </div> <!-- form-group// -->
+
+                <div class="form-group input-group">
+                    <label for="to_date" class="mr-3" style="width: 100px;">الي تاريخ:</label>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-clock"></i> </span>
+                    </div>
+                    <input id="to_date" name="to_date" class="form-control" type="date">
+                </div> <!-- form-group// -->
+
+                <div class="form-group">
+                    <button type="submit" class=" btn-success btn-block">اضافة</button>
+                </div> <!-- form-group// -->
+            </form>
+        </article>
+
+        <div class="text-right mt-5 pr-4">
+            <a href="" class="btn btn-danger">رجوع</a>
+        </div>
+    </div>
+</div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% set flashed = false %}
+        {% if 'username' in session %}
+            {% for category, message in messages %}
+                {% if not flashed %}
+                    <div id="flash-messages">
+                        <div class="alert alert-{{ category }}" role="alert">
+                            {{ message }}
+                        </div>
+                    </div>
+                    {% set flashed = true %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endwith %}
+
+<script>
+    // Automatically remove flash messages after 5 seconds
+    setTimeout(function() {
+        var flashMessages = document.getElementById('flash-messages');
+        if (flashMessages) {
+            flashMessages.parentNode.removeChild(flashMessages);
+        }
+    }, 5000); // 5000 milliseconds = 5 seconds
+</script>
+    </script>
 
 {% endblock content %}

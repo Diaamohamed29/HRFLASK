@@ -1,14 +1,135 @@
 {% extends 'base.html'%}
 
 {% block content %}
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
 
+<style>
+    body {
+        background-color: #ffeed6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .card {
+        background-color: #ffeed6; /* Lighter background color for the form */
+        border: none; /* Remove default border */
+        box-shadow: 0 0 40px rgba(0,0,0,0.1); /* Add shadow for depth */
+        border-radius:50px; /* Add border radius for rounded corners */
+    }
+
+    .card-title {
+        color: #333; /* Set color for the card title */
+    }
+
+    .form-control {
+        background-color: #fff; /* Set background color for form inputs */
+        border: none; /* Remove default input border */
+        border-radius: 5px; /* Add border radius for rounded corners */
+        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Add shadow for depth */
+    }
+
+    .btn {
+        background-color: #dc3545; /* Set background color for buttons */
+        color: #fff; /* Set text color for buttons */
+        border: none; /* Remove default button border */
+        border-radius: 5px; /* Add border radius for rounded corners */
+        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Add shadow for depth */
+    }
+
+    .btn:hover {
+        background-color: #c82333; /* Darker color on hover */
+    }
+</style>
+</head>
 <!-- Logo Section -->
 <div class=" text-center logo-container">
     <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
     <h1 style="margin-bottom:30px"></h1>
 </div>
 
+<div class="container">
+    <div class="card">
+        <article class="card-body mx-auto" style="max-width: 400px;">
+            <h4 class="card-title mt-3 text-center">اضافة مأمورية</h4>
+          
+            <form action="{{ url_for('admin.add_mission_page') }}" method="POST">
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                    </div>
+                    <select class="form-control" id="employe_id" name="employe_id">
+                        {% for employee in all_employes %}
+                            <option value="{{ employee }}">{{ employee }}</option>
+                        {% endfor %}
+                    </select>
+                </div> <!-- form-group// -->
+    
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-calendar"></i> </span>
+                    </div>
+                    <input name="date" class="form-control" placeholder="التاريخ" type="date">
+                </div> <!-- form-group// -->
+    
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-clock"></i> </span>
+                    </div>
+                    <input name="from_time" class="form-control" placeholder="من" type="time">
+                </div> <!-- form-group// -->
+    
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-clock"></i> </span>
+                    </div>
+                    <input name="to_time" class="form-control" placeholder="الي" type="time">
+                </div> <!-- form-group// -->
+    
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-clock"></i> </span>
+                    </div>
+                    <input name="reason" class="form-control" placeholder="سبب المأمورية" type="text">
+                </div> <!-- form-group// -->
+            
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-block" id="submitBtn"> Add  </button>
+                </div> <!-- form-group// -->      
+            </form>
+        </article>
+        
+    </div>
+   
+</div>
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% set flashed = false %}
+        {% if 'username' in session %}
+            {% for category, message in messages %}
+                {% if not flashed %}
+                    <div id="flash-messages">
+                        <div class="alert alert-{{ category }}" role="alert">
+                            {{ message }}
+                        </div>
+                    </div>
+                    {% set flashed = true %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endwith %}
 
+<script>
+    // Automatically remove flash messages after 5 seconds
+    setTimeout(function() {
+        var flashMessages = document.getElementById('flash-messages');
+        if (flashMessages) {
+            flashMessages.parentNode.removeChild(flashMessages);
+        }
+    }, 5000); // 5000 milliseconds = 5 seconds
+</script>
 
 {% endblock content %}

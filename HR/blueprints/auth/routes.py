@@ -1,4 +1,4 @@
-from flask import request , render_template , redirect , url_for , Blueprint,session
+from flask import request , render_template , redirect , url_for , Blueprint,session,flash
 from HR.blueprints.user.routes import user
 from HR.blueprints.admin.routes import admin
 from HR.db import connection,cursor
@@ -27,7 +27,12 @@ def login():
 
             if account[0] == 'admin' and account[1] =='admin':
                 session['username'] = username
+                flash('Logged in successfullly','success')
                 return redirect(url_for('admin.index'))
+            if account[0] == username and account[1] == password:
+                session['username'] = username
+                flash('Logged in successfullly','success')
+                return redirect(url_for('user.index'))
             # print(account)
         
             # if account :

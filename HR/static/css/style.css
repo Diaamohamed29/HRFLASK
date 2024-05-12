@@ -22,13 +22,13 @@ body {
     overflow: hidden;
     transition: transform 0.3s, border-color 0.3s;
     border: 2px solid transparent; /* Initial border color */
-    background-color: burlywood;
+    background-color: #ffeed6;
   }
   
   .card:hover {
     transform: scale(1.05); /* Adjust as needed */
     border-color: orange; /* Change border color on hover */
-    background-color: #fff; /* Change background color on hover */
+    background-color: #ffeed6; /* Change background color on hover */
   }
   
   .card-link {
@@ -58,11 +58,12 @@ body {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 30px;
+    background-color: #ffeed6;
   }
   
   .cardBox .card {
     position: relative;
-    background: var(--white);
+    background: #ffeed6;
     padding: 30px;
     border-radius: 20px;
     display: flex;
@@ -92,12 +93,12 @@ body {
   }
   
   .cardBox .card:hover {
-    background: var(--blue);
+    background: var(--white);
   }
   .cardBox .card:hover .numbers,
   .cardBox .card:hover .cardName,
   .cardBox .card:hover .iconBx {
-    color: var(--white);
+    color: var(--black);
   }
 
 
