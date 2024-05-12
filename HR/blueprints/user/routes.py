@@ -181,6 +181,14 @@ def add_vacation():
 
 
 
+@user.route('/vacation_requests')
+def vacation_requests():
+    employe_id = session['username']
+    cursor.execute("""SELECT employe_id, name, department, job_role, date, vac_type,
+                                      no_of_days, from_date, to_date ,status
+                               FROM vacation_requests where employe_id  = ? """,(employe_id) )
+    results = cursor.fetchall()
+    return render_template('user/vacation_requests.html',employe_id=employe_id,results=results)
 
 
 
@@ -190,9 +198,17 @@ def add_vacation():
 
 
 
+@user.route('/mission_requests')
+def mission_requests():
+    
+         
+    employe_id = session['username']
 
-
-
+    cursor.execute("""SELECT employe_id,name,job_role ,date, from_time,
+                                      to_time, reason ,status
+                               FROM missions where employe_id  = ? """,(employe_id) )
+    results = cursor.fetchall()
+    return render_template('user/mission_requests.html',employe_id=employe_id,results=results)
 @user.route('/missions')
 def missions():
     username = session['username']
@@ -200,22 +216,40 @@ def missions():
     name = cursor.fetchall()
     return render_template('user/missions.html',name=name,username=username)
 
-@user.route('/add_mission')
+@user.route('/add_mission',methods=['POST','GET'])
 def add_mission():
-    username = session['username']
-    cursor.execute("select name from employes where employe_id = ?",(username))
-    name = cursor.fetchall()
+    if request.method == 'GET':
+        username = session['username']
+        cursor = connection.cursor()
+        cursor.execute("select name from employes where employe_id = ?",(username))
+        name = cursor.fetchall()
 
-    cursor.execute("Select job_role from employes where employe_id = ?" ,(username))
-    job_role = cursor.fetchall()
-    return render_template('user/add_mission.html',name=name,username=username,job_role=job_role)
+        cursor.execute("Select job_role from employes where employe_id = ?" ,(username))
+        job_role = cursor.fetchall()
+        return render_template('user/add_mission.html',name=name,username=username,job_role=job_role)
+    elif request.method =='POST':
+        employe_id = request.form.get('employe_id')
+        name = request.form.get('name')
+        job_role = request.form.get('job_role')
+        date = request.form.get('date')
+        from_time = request.form.get('from_time')
+        to_time = request.form.get('to_time')
+        reason = request.form.get('reason')
+        status = 0
+        cursor = connection.cursor()
+        sql = "INSERT INTO missions (employe_id,name, date, job_role,from_time, to_time, reason,status) VALUES (?, ?, ?, ?, ?, ?,?,?)"
+        cursor.execute(sql, (employe_id, name, date,job_role, from_time, to_time,reason,status))
+        connection.commit()
+        
+        flash('mission request added successfully!', 'success')
+        return redirect(url_for('user.add_mission'))
 @user.route('/view_missions')
 def view_missions():
     username = session['username']
     cursor.execute("select name from employes where employe_id = ?",(username))
     name = cursor.fetchall()
     cursor.execute(""" 
-            select employe_id , name , date , from_time , to_time ,reason from missions where employe_id = ?
+            select employe_id , name ,job_role, date , from_time , to_time ,reason from missions where employe_id = ?
 
         """,(username))
     results = cursor.fetchall()

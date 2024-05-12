@@ -111,56 +111,38 @@ body {
 }
 </style>
 </head>
-
 <!-- Logo Section -->
 <div class=" text-center logo-container">
     <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
     <h1 style="margin-bottom:30px"></h1>
 </div>
 
+
 <div class="container">
-    <div class="admincard">
-        <a href="all_missions">
-      <h3 class="title">مأموريات</h3>
-      <div class="bar">
-        <div class="emptybar"></div>
-        <div class="filledbar"></div>
-      </div>
-      <div class="icon-container"> <!-- Added div for icon container -->
-        <ion-icon name="airplane" class="icon"></ion-icon> <!-- Replace this with your icon -->
-    </div>
-        </a>
-    </div>
-
-    
-    <div class="admincard">
-            <a href="add_mission_page">
-          <h3 class="title">طلب مأمورية</h3>
-          <div class="bar">
-            <div class="emptybar"></div>
-            <div class="filledbar"></div>
-          </div>
-          <div class="icon-container"> <!-- Added div for icon container -->
-            <ion-icon name="add-circle-outline" class="icon"></ion-icon> <!-- Replace this with your icon -->
-        </div>
-            </a>
-    </div>
-    
-    
-    <div class="admincard">
-      <a href="mission_requests">
-    <h3 class="title">طلبات</h3>
-    <div class="bar">
-      <div class="emptybar"></div>
-      <div class="filledbar"></div>
-    </div>
-    <div class="icon-container"> <!-- Added div for icon container -->
-      <ion-icon name="add-circle-outline" class="icon"></ion-icon> <!-- Replace this with your icon -->
+<div class="admincard">
+    <a href="head_salaries">
+  <h3 class="title">رواتب الادارة</h3>
+  <div class="bar">
+    <div class="emptybar"></div>
+    <div class="filledbar"></div>
   </div>
-      </a>
+  <div class="icon-container"> <!-- Added div for icon container -->
+    <ion-icon name="cash-outline" class="icon"></ion-icon> <!-- Replace this with your icon -->
+</div>
+    </a>
+</div>
+
+<div class="admincard">
+    <a href="month_salary">
+  <h3 class="title">راتب شهر</h3>
+  <div class="bar">
+    <div class="emptybar"></div>
+    <div class="filledbar"></div>
+  </div>
+  <div class="icon-container"> <!-- Added div for icon container -->
+    <ion-icon name="cash-outline" class="icon"></ion-icon> <!-- Replace this with your icon -->
+</div>
+    </a>
 </div>
 </div>
-
-
-
 {% endblock content %}

@@ -45,7 +45,7 @@
         padding: 30px;
         text-align: center;
         transition: all 0.3s ease;
-        width: 300px;
+        width: 200px;
         height: 400px;
     }
 
@@ -165,8 +165,17 @@
             <div class="numbers"> </div>
         </div>
     </a>
+    <a href="vacation_requests">
+        <div class="card">
+            <div class="iconBx">
+                <ion-icon name="airplane" style="font-size: 36px; color: #007bff;"></ion-icon>
+            </div>
+            <div class="cardName">طلبات</div>
+            <div class="numbers"> </div>
+        </div>
+    </a>
 </div>
-<div class="attendance-user text-center">
+<!-- <div class="attendance-user text-center">
     <div class="all-attendance-user text-center mt-5" style="font-size: 30px;">
         {% if results %}
             <table id="attendanceTable">
@@ -197,7 +206,7 @@
             <p>لا توجد اجازات الشهر الحالي</p>
         {% endif %}
     </div>
-</div>
+</div> -->
 <div class="text-right mt-5">
     <a href="{{url_for('user.index')}}">
     <button class="btn btn-danger">رجوع</button></a>

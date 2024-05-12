@@ -3,7 +3,7 @@ from zk import ZK , const
 import pandas as pd 
 from sqlalchemy import create_engine
 
-connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-RNTE44E;DATABASE=HR-REPORTS-FINAL;Trusted_Connection=yes;')
+connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-RNTE44E;DATABASE=HR;Trusted_Connection=yes;')
 cursor = connection.cursor()
 
 
@@ -15,7 +15,7 @@ def connect_to_zkteco():
 
 
     DB = {'servername':'DESKTOP-RNTE44E',
-            'database':'HR-REPORTS-FINAL',
+            'database':'HR',
             'driver':'driver=SQL Server Native Client 11.0'}
 
     engine = create_engine('mssql+pyodbc://' + DB['servername'] + '/' + DB['database'] + "?" + DB['driver'])
@@ -185,4 +185,41 @@ def connect_to_zkteco():
         check_out IS NOT NULL;
 
     """)
+    connection.commit()
+
+def month_report():
+    cursor.execute(""" 
+
+
+                    UPDATE month_report 
+            SET 
+                check_in = z.check_in,
+                check_out = z.check_out,
+                check_in_per = z.check_in_per,
+                check_out_per = z.check_out_per,
+                check_extra_minutes = z.extra_minutes
+            FROM month_report AS m
+            INNER JOIN zktecoAll AS z ON m.employe_id = z.employe_id AND m.date = z.date;
+
+        """) 
+    connection.commit()
+
+
+    cursor.execute(""" 
+
+                                
+                UPDATE month_report 
+                SET total_extra = 
+                    CASE 
+                        WHEN check_extra_minutes >= 60 THEN check_extra_minutes / 60.0
+                        ELSE check_extra_minutes * 1.0 / 60  -- Convert minutes to fraction of an hour
+                    END;
+                """)
+    connection.commit()
+
+    cursor.execute(""" 
+        UPDATE month_report 
+        SET check_day = 1 
+        WHERE check_in_per = 0 AND check_out_per = 0;
+            """)
     connection.commit()

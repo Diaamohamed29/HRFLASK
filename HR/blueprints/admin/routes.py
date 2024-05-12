@@ -347,6 +347,56 @@ def add_mission_page():
 def view_missions():
     return render_template('admin/all_missions.html')
 
+
+@admin.route('/mission_requests')
+def mission_requests():
+    if request.method == 'POST':
+        try:
+            employe_id = request.form.get('employe_id')
+            date = request.form.get('date')
+            action = request.form.get('action')
+
+            if action == 'accept':
+                cursor.execute(""" 
+                    UPDATE missions 
+                    SET status = 1 
+                    WHERE employe_id = ? AND date = ?
+                """, (employe_id, date))
+                connection.commit()
+                flash("Mission request accepted successfully!", "success")
+
+            elif action == 'reject':
+                cursor.execute(""" 
+                    UPDATE missions
+                    SET status = -1 
+                    WHERE employe_id = ? AND date = ?
+                """, (employe_id, date))
+                connection.commit()
+                flash("Mission request rejected !", "danger")
+
+            else:
+                flash("Invalid action!", "danger")
+
+        except Exception as e:
+            flash(f"An error occurred: {str(e)}", "danger")
+
+        return redirect(url_for('admin.vacation_requests'))
+
+    else:
+        try:
+            cursor.execute("""SELECT employe_id, name, job_role, date, from_time, to_time,
+                                      reason
+                               FROM missions 
+                               WHERE status = 0 """)
+            results = cursor.fetchall()
+            return render_template('admin/vacation_requests.html', results=results)
+        
+        except Exception as e:
+            flash(f"An error occurred: {str(e)}", "danger")
+            return redirect(url_for('admin.vacation_requests'))
+
+
+
 ### END MISSIONS PAGE ###
 
 
@@ -371,5 +421,51 @@ def gaz():
 ### SALARIES PAGE ###
 @admin.route('/salaries')
 def salaries():
+
     return render_template('admin/salaries.html')
+
+@admin.route('/update_salaries',methods=['POST'])
+def update_salaries():
+    try:
+        cursor = connection.cursor()
+
+        # Fetch data from the form
+        employee_id = request.form['employeeId']
+        cell_index = request.form['cellIndex']
+        new_value = request.form['newValue']
+
+        # Determine which column to update based on the cell index
+        columns = ['employe_id', 'name', 'department', 'job_role', 'net_salary', 'allowance']
+        column_to_update = columns[int(cell_index)]
+
+        # Prepare and execute the SQL UPDATE statement
+        sql = f"UPDATE salaries SET {column_to_update} = ? WHERE employe_id = ?"
+        cursor.execute(sql, (new_value, employee_id))
+        connection.commit()
+
+        flash('Employe Updated successfully!', 'success') 
+    except Exception as e:
+        connection.rollback()
+        return f"Error: {e}"
+    finally:
+        cursor.close()
+    
+        return redirect(url_for('admin.head_salaries'))
+
+@admin.route('/head_salaries')
+def head_salaries():
+    cursor.execute(""" 
+            select employe_id , name , department , job_role , net_salary  ,
+                   allowance , total_salary from salaries 
+            """)
+    results = cursor.fetchall()
+    return render_template('admin/head_salaries.html',results=results)
+
+
+@admin.route('/month_salary')
+def month_salary():
+    return render_template('admin/month_salary.html')
+
+
+
 ### END SALARIES PAGE ###
