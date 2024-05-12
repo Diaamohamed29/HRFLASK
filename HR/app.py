@@ -16,4 +16,8 @@ def create_app():
     app.register_blueprint(user,url_prefix='/user')
     from HR.blueprints.admin.routes import admin
     app.register_blueprint(admin,url_prefix='/admin')
+    from HR.blueprints.super.routes import super
+    app.register_blueprint(super,url_prefix='/super')
+    from HR.blueprints.ceo.routes import ceo
+    app.register_blueprint(ceo,url_prefix='/ceo')
     return app 
