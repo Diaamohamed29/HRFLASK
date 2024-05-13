@@ -189,6 +189,16 @@ def connect_to_zkteco():
 
 def month_report():
     cursor.execute(""" 
+            update month_report 
+                   set check_in = '00:00' ,
+                        check_out = '00:00' ,
+                        check_in_per = 0 , 
+                        check_out_per = 0 
+            where day = 'Friday' or day ='Saturday'
+                   
+        """)
+    connection.commit()
+    cursor.execute(""" 
 
 
                     UPDATE month_report 
@@ -223,3 +233,26 @@ def month_report():
         WHERE check_in_per = 0 AND check_out_per = 0;
             """)
     connection.commit()
+    
+    cursor.execute(""" 
+                        
+                UPDATE mr
+            SET mr.check_mission = m.status
+            FROM month_report mr
+            JOIN missions m ON mr.employe_id = m.employe_id AND mr.date = m.date;
+
+            """)
+    connection.commit()
+
+    cursor.execute(""" 
+            update month_report 
+                   set check_day = 1
+                   where check_mission = 1 
+        """)
+    connection.commit()
+    cursor.execute(""" 
+        update month_report 
+                   set check_per = 0
+                   where check_mission = 1 
+            """)
+    connection

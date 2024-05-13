@@ -1,5 +1,5 @@
 from flask import request , render_template , redirect , url_for , Blueprint,session,jsonify,flash
-from HR.db import connection , cursor ,connect_to_zkteco
+from HR.db import connection , cursor ,connect_to_zkteco,month_report
 from datetime import datetime , timedelta
 
 
@@ -326,13 +326,19 @@ def add_mission_page():
             from_time = request.form['from_time']
             to_time = request.form['to_time']
             reason = request.form['reason']
+            status = 0
 
             # Prepare and execute SQL INSERT statement
-            sql = """INSERT INTO missions (employe_id, date, from_time, to_time, reason)
-                     VALUES (?, ?, ?, ?, ?)"""
-            cursor.execute(sql, (employee_id, date, from_time, to_time, reason))
+            sql = """INSERT INTO missions (employe_id, date, from_time, to_time, reason,status)
+                     VALUES (?, ?, ?, ?, ?,?)"""
+            cursor.execute(sql, (employee_id, date, from_time, to_time, reason,status))
             connection.commit()
-
+            cursor.execute(""" 
+                    update missions 
+                           set name = (select name from employes where employe_id = missions.employe_id),
+                                job_role = (select job_role from employes where employe_id = missions.employe_id)
+                """)
+            connection.commit()
             flash('Mission added successfully!', 'success')  # Flash success message
             return redirect(url_for('admin.add_mission_page'))  # Redirect to the same page after adding the mission
         except Exception as e:
@@ -348,7 +354,7 @@ def view_missions():
     return render_template('admin/all_missions.html')
 
 
-@admin.route('/mission_requests')
+@admin.route('/mission_requests',methods=["POST","GET"])
 def mission_requests():
     if request.method == 'POST':
         try:
@@ -380,7 +386,7 @@ def mission_requests():
         except Exception as e:
             flash(f"An error occurred: {str(e)}", "danger")
 
-        return redirect(url_for('admin.vacation_requests'))
+        return redirect(url_for('admin.mission_requests'))
 
     else:
         try:
@@ -389,11 +395,11 @@ def mission_requests():
                                FROM missions 
                                WHERE status = 0 """)
             results = cursor.fetchall()
-            return render_template('admin/vacation_requests.html', results=results)
+            return render_template('admin/mission_requests.html', results=results)
         
         except Exception as e:
             flash(f"An error occurred: {str(e)}", "danger")
-            return redirect(url_for('admin.vacation_requests'))
+            return redirect(url_for('admin.mission_requests'))
 
 
 
@@ -454,6 +460,8 @@ def update_salaries():
 
 @admin.route('/head_salaries')
 def head_salaries():
+    connect_to_zkteco()
+    month_report()
     cursor.execute(""" 
             select employe_id , name , department , job_role , net_salary  ,
                    allowance , total_salary from salaries 
