@@ -1,5 +1,5 @@
 from flask import request , render_template , redirect , url_for , Blueprint,session,jsonify,flash
-from HR.db import connection , cursor ,connect_to_zkteco,month_report
+from HR.db import connection , cursor ,connect_to_zkteco
 from datetime import datetime , timedelta
 
 
@@ -460,11 +460,11 @@ def update_salaries():
 
 @admin.route('/head_salaries')
 def head_salaries():
-    connect_to_zkteco()
-    month_report()
+    # connect_to_zkteco()
+    # month_report()
     cursor.execute(""" 
             select employe_id , name , department , job_role , net_salary  ,
-                   allowance , total_salary from salaries 
+                   allowance , total_net from salaries 
             """)
     results = cursor.fetchall()
     return render_template('admin/head_salaries.html',results=results)

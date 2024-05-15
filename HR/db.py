@@ -186,73 +186,107 @@ def connect_to_zkteco():
 
     """)
     connection.commit()
-
-def month_report():
     cursor.execute(""" 
-            update month_report 
-                   set check_in = '00:00' ,
-                        check_out = '00:00' ,
-                        check_in_per = 0 , 
-                        check_out_per = 0 
-            where day = 'Friday' or day ='Saturday'
-                   
-        """)
-    connection.commit()
-    cursor.execute(""" 
+                    UPDATE month_report
+        SET 
+            check_in = z.check_in,
+            check_out = z.check_out,
+            check_in_per = z.check_in_per,
+            check_out_per = z.check_out_per,
+            check_extra_minutes = z.extra_minutes
+            
+        FROM month_report mr
+        INNER JOIN zktecoAll z ON mr.employe_id = z.employe_id AND mr.date = z.date
 
-
-                    UPDATE month_report 
-            SET 
-                check_in = z.check_in,
-                check_out = z.check_out,
-                check_in_per = z.check_in_per,
-                check_out_per = z.check_out_per,
-                check_extra_minutes = z.extra_minutes
-            FROM month_report AS m
-            INNER JOIN zktecoAll AS z ON m.employe_id = z.employe_id AND m.date = z.date;
-
-        """) 
+            """)
     connection.commit()
 
-
     cursor.execute(""" 
+            
+            UPDATE mr
+                SET 
+                    mr.check_mission = m.status,
+                    mr.check_vacation = CASE WHEN vr.employe_id IS NOT NULL THEN 1 ELSE 0 END,
+                    mr.check_per = CASE 
+                                        WHEN mr.check_in_per <> 0 AND mr.check_out_per = 0 AND mr.check_mission = 0 AND mr.check_vacation = 0 
+                                        THEN mr.check_in_per
+                                        ELSE mr.check_per
+                                    END
+                FROM month_report mr
+                LEFT JOIN missions m ON mr.employe_id = m.employe_id AND mr.date = m.date
+                LEFT JOIN vacation_requests vr ON mr.employe_id = vr.employe_id AND mr.date BETWEEN vr.from_date AND vr.to_date;
 
-                                
-                UPDATE month_report 
-                SET total_extra = 
-                    CASE 
-                        WHEN check_extra_minutes >= 60 THEN check_extra_minutes / 60.0
-                        ELSE check_extra_minutes * 1.0 / 60  -- Convert minutes to fraction of an hour
-                    END;
                 """)
     connection.commit()
 
-    cursor.execute(""" 
-        UPDATE month_report 
-        SET check_day = 1 
-        WHERE check_in_per = 0 AND check_out_per = 0;
-            """)
-    connection.commit()
-    
-    cursor.execute(""" 
-                        
-                UPDATE mr
-            SET mr.check_mission = m.status
-            FROM month_report mr
-            JOIN missions m ON mr.employe_id = m.employe_id AND mr.date = m.date;
 
-            """)
-    connection.commit()
 
-    cursor.execute(""" 
-            update month_report 
-                   set check_day = 1
-                   where check_mission = 1 
-        """)
-    connection.commit()
-    cursor.execute(""" 
-        update month_report 
-                   set check_per = 0
-                   where check_mission = 1 
-            """)
-    connection
+
+# def month_report():
+
+#     cursor.execute(""" 
+        
+#         update month_report 
+#         set check_in = (select check_in from zktecoAll where employe_id = month_report.employe_id and date = month_report.date),
+#             check_out = (select check_out from zktecoAll Where employe_id = month_report.employe_id and date = month_report.date),
+#             check_in_per = (select check_in_per from zktecoAll where employe_id = month_report.employe_id and date = month_report.date),
+#             check_out_per = (select check_out_per from zktecoAll where employe_id = month_report.employe_id and date = month_report.date),
+#             check_extra_minutes = (select extra_minutes from zktecoAll where employe_id = month_report.employe_id and date = month_report.date)
+
+
+#         """)
+#     connection.commit()
+
+#     cursor.execute(""" 
+#         update month_report 
+#         set check_in = '00:00',
+#             check_out = '00:00',
+#             check_in_per = 0 , 
+#             check_out_per = 0 ,
+#             check_extra_minutes = 0
+#         where day ='Friday' or day ='Saturday'
+
+
+#             """)
+#     connection.commit()
+
+#     cursor.execute(""" 
+            
+#         UPDATE month_report
+#         SET check_vacation = 1
+#         FROM month_report MR
+#         JOIN vacation_requests VR ON MR.employe_id = VR.employe_id
+#         WHERE MR.date BETWEEN VR.from_date AND VR.to_date;
+
+
+#             """)
+#     connection.commit()
+
+#     cursor.execute(""" 
+                    
+#         UPDATE mr
+#         SET mr.check_mission = m.status
+#         FROM month_report mr
+#         JOIN missions m ON mr.employe_id = m.employe_id AND mr.date = m.date;
+
+
+
+#         """)
+#     connection.commit()
+
+#     cursor.execute(""" 
+            
+#         UPDATE month_report
+#         SET check_per = 
+#             CASE 
+#                 WHEN check_vacation = 1 OR check_mission = 1 THEN 0
+#                 WHEN check_in_per = 0 AND check_out_per = 0 THEN 0
+#                 WHEN check_in_per <> 0 AND check_out_per = 0 AND check_mission = 0 AND check_vacation = 0 THEN check_in_per
+#                 ELSE check_per
+#             END;
+
+
+#             """)
+#     connection.commit()
+
+# connect_to_zkteco()
