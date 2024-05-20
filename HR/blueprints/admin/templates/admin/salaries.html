@@ -134,7 +134,7 @@ body {
 
 <div class="admincard">
     <a href="month_salary">
-  <h3 class="title">راتب شهر</h3>
+  <h3 class="title"> راتب شهر {{current_month}}</h3>
   <div class="bar">
     <div class="emptybar"></div>
     <div class="filledbar"></div>
@@ -143,6 +143,49 @@ body {
     <ion-icon name="cash-outline" class="icon"></ion-icon> <!-- Replace this with your icon -->
 </div>
     </a>
+</div>
+
+
+
+
+<div class="admincard">
+  <a href="deductions">
+<h3 class="title">استقطاعات</h3>
+<div class="bar">
+  <div class="emptybar"></div>
+  <div class="filledbar"></div>
+</div>
+<div class="icon-container"> <!-- Added div for icon container -->
+  <ion-icon name="cash-outline" class="icon"></ion-icon> <!-- Replace this with your icon -->
+</div>
+  </a>
+</div>
+
+<div class="admincard">
+  <a href="administrative_cuts">
+<h3 class="title">جزاءت ادارية </h3>
+<div class="bar">
+  <div class="emptybar"></div>
+  <div class="filledbar"></div>
+</div>
+<div class="icon-container"> <!-- Added div for icon container -->
+  <ion-icon name="cash-outline" class="icon"></ion-icon> <!-- Replace this with your icon -->
+</div>
+  </a>
+</div>
+
+
+<div class="admincard">
+  <a href="loans_insurance">
+<h3 class="title">سلف & تأمينات</h3>
+<div class="bar">
+  <div class="emptybar"></div>
+  <div class="filledbar"></div>
+</div>
+<div class="icon-container"> <!-- Added div for icon container -->
+  <ion-icon name="cash-outline" class="icon"></ion-icon> <!-- Replace this with your icon -->
+</div>
+  </a>
 </div>
 </div>
 {% endblock content %}

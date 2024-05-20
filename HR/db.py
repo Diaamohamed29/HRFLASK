@@ -2,7 +2,7 @@ import pyodbc
 from zk import ZK , const 
 import pandas as pd 
 from sqlalchemy import create_engine
-
+from datetime import datetime , timedelta
 connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-6RVJEGB;DATABASE=HR;Trusted_Connection=yes;')
 cursor = connection.cursor()
 
@@ -223,3 +223,114 @@ def connect_to_zkteco():
 
 
 
+
+def current_month_report():
+    # Get current date and time
+    current_datetime = datetime.now()
+
+    # Extract current year, month, and day
+    current_year = current_datetime.year
+    current_month = current_datetime.month
+    current_day = current_datetime.day
+
+    # Set start date to the 26th of the previous month
+    start_date = datetime(current_year, current_month, 26) - timedelta(days=30)
+
+    # Set end date to the 25th of the current month
+    end_date = datetime(current_year, current_month, 25)
+
+    # Adjust start and end dates if the current day is after the 25th
+    if current_day >= 26:
+        start_date = datetime(current_year, current_month, 26)
+        end_date = start_date + timedelta(days=30)
+        
+    cursor.execute(""" 
+    DELETE FROM current_month_report
+    """)
+    connection.commit()
+
+    cursor.execute(""" 
+    INSERT INTO current_month_report (employe_id, name, date, day, check_in, check_out,
+                                        total_extra, check_vacation, check_mission,
+                                        check_per)
+    SELECT employe_id, name, date, day,
+            check_in, check_out, total_extra,
+            check_vacation, check_mission, check_per
+    FROM month_report 
+    WHERE date BETWEEN ? AND ?
+    """, (start_date, end_date))
+    connection.commit()
+
+    
+    cursor.execute(""" 
+                    
+    UPDATE cmr
+    SET cmr.check_per = CASE
+                            WHEN cmr.check_vacation = 1 OR cmr.check_mission = 1 THEN 0
+                            WHEN mr.check_in_per <> 0 AND cmr.check_mission = 0 AND cmr.check_vacation = 0 THEN mr.check_in_per
+                            ELSE cmr.check_per
+                        END
+    FROM current_month_report cmr
+    
+    INNER JOIN month_report mr ON cmr.employe_id = mr.employe_id AND cmr.date = mr.date;
+                   
+                   """)
+    connection.commit()
+
+
+
+    cursor.execute(""" 
+                   
+UPDATE md
+SET late = CASE
+               WHEN i.check_per_sum < 4 THEN 0
+               ELSE (i.check_per_sum - 4) * 0.25
+           END
+FROM month_deductions md
+JOIN (
+    SELECT employe_id, SUM(check_per) AS check_per_sum
+    FROM current_month_report
+    GROUP BY employe_id
+) AS i ON md.employe_id = i.employe_id;
+
+
+                   
+                   """)
+    connection.commit()
+
+
+
+
+
+
+
+def update_month_report():
+    current_datetime = datetime.now()
+
+    # Extract current year, month, and day
+    current_year = current_datetime.year
+    current_month = current_datetime.month
+    current_day = current_datetime.day
+
+    # Set start date to the 26th of the previous month
+    start_date = datetime(current_year, current_month, 26) - timedelta(days=30)
+
+    # Set end date to the 25th of the current month
+    end_date = datetime(current_year, current_month, 25)
+
+    # Adjust start and end dates if the current day is after the 25th
+    if current_day >= 26:
+        start_date = datetime(current_year, current_month, 26)
+        end_date = start_date + timedelta(days=30)
+    cursor.execute("EXEC InsertIntoMonthReportFromZktecoAll")
+    cursor.execute("EXEC UpdateNameAndDayInMonthReport")
+    cursor.execute("EXEC UpdateMissionsInMonthReport")
+    cursor.execute("EXEC UpdateVacationRequestsInMonthReport")
+    cursor.execute("EXEC InsertValuesIntoCurrentMonthReport ?, ?", start_date, end_date)
+
+    connection.commit()
+    
+
+
+# update_month_report()
+connect_to_zkteco()

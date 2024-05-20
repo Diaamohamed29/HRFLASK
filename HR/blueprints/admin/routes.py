@@ -327,7 +327,7 @@ def add_mission_page():
             from_time = request.form['from_time']
             to_time = request.form['to_time']
             reason = request.form['reason']
-            status = 0
+            status = 1
 
             # Prepare and execute SQL INSERT statement
             sql = """INSERT INTO missions (employe_id, date, from_time, to_time, reason,status)
@@ -428,8 +428,26 @@ def gaz():
 ### SALARIES PAGE ###
 @admin.route('/salaries')
 def salaries():
+    
+# Get current date information
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+    current_day = datetime.now().day
 
-    return render_template('admin/salaries.html')
+    # Define start and end dates based on the current date
+    if current_day >= 26:
+        start_date = datetime(current_year, current_month, 26).date()
+        end_date = (datetime(current_year, current_month, 25) + timedelta(days=30)).date()
+    else:
+        current_month -= 1  # Adjust current month to previous month
+        if current_month == 0:  # Handle the case where the current month is January
+            current_month = 12
+            current_year -= 1
+        start_date = (datetime(current_year, current_month, 25) - timedelta(days=30)).date()
+        end_date = datetime(current_year, current_month, 25).date()
+
+
+    return render_template('admin/salaries.html',current_month=current_month)
 
 @admin.route('/update_salaries',methods=['POST'])
 def update_salaries():
@@ -475,6 +493,16 @@ def head_salaries():
 def month_salary():
     return render_template('admin/month_salary.html')
 
+@admin.route('/deductions')
+def deduction():
+    return render_template('admin/deductions.html')
 
+@admin.route('/administrative_cuts')
+def administrative_cuts():
+    return render_template('admin/administrative.html')
+
+@admin.route('/loans_insurance')
+def loans_insurance():
+    return render_template('admin/loans_insurance.html')
 
 ### END SALARIES PAGE ###
