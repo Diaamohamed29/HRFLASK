@@ -2,6 +2,7 @@ import pyodbc
 from zk import ZK , const 
 import pandas as pd 
 from sqlalchemy import create_engine
+from datetime import datetime , timedelta
 
 connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-RNTE44E;DATABASE=Professional_HR;Trusted_Connection=yes;')
 cursor = connection.cursor()
@@ -221,6 +222,43 @@ def connect_to_zkteco():
 
 
 
+def current_month_report():
+    # Get current date and time
+    current_datetime = datetime.now()
+
+    # Extract current year, month, and day
+    current_year = current_datetime.year
+    current_month = current_datetime.month
+    current_day = current_datetime.day
+
+    # Set start date to the 26th of the previous month
+    start_date = datetime(current_year, current_month, 26) - timedelta(days=30)
+
+    # Set end date to the 25th of the current month
+    end_date = datetime(current_year, current_month, 25)
+
+# Adjust start and end dates if the current day is after the 25th
+    if current_day >= 26:
+        start_date = datetime(current_year, current_month, 26)
+        end_date = start_date + timedelta(days=30)
+        
+    cursor.execute(""" 
+    delete from current_month_report
+    """)
+    connection.commit()
+
+    cursor.execute(""" 
+    insert into current_month_report (employe_id , name , date , day , check_in , check_out ,
+                                        total_extra,check_vacation , check_mission,
+                                        check_per)
+    select employe_id , name , date , day ,
+            check_in , check_out , total_extra ,
+            check_vacation , check_mission , check_per
+    from month_report 
+    where date between ? and ?
+    """, (start_date, end_date))
+    connection.commit()
 
 
-connect_to_zkteco()
+# connect_to_zkteco()
+current_month_report()
