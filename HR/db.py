@@ -3,7 +3,7 @@ from zk import ZK , const
 import pandas as pd 
 from sqlalchemy import create_engine
 
-connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-RNTE44E;DATABASE=Professional_HR;Trusted_Connection=yes;')
+connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-6RVJEGB;DATABASE=HR;Trusted_Connection=yes;')
 cursor = connection.cursor()
 
 
@@ -14,8 +14,8 @@ def connect_to_zkteco():
 
 
 
-    DB = {'servername':'DESKTOP-RNTE44E',
-            'database':'Professional_HR',
+    DB = {'servername':'DESKTOP-6RVJEGB',
+            'database':'HR',
             'driver':'driver=SQL Server Native Client 11.0'}
 
     engine = create_engine('mssql+pyodbc://' + DB['servername'] + '/' + DB['database'] + "?" + DB['driver'])
@@ -223,4 +223,3 @@ def connect_to_zkteco():
 
 
 
-connect_to_zkteco()

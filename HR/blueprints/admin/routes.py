@@ -42,12 +42,13 @@ def add_employe():
             qualification = request.form['qualification']
             national_id = request.form['national_id']
             address = request.form['address']
+            social_insurance = request.form['social_insurance']
             print(employe_id,name,job_role)
             # Prepare and execute SQL INSERT statement
-            sql = """INSERT INTO employes (employe_id, name, job_role, department, net_salary, allowance, telephone, qualification, national_id, address)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+            sql = """INSERT INTO employes (employe_id, name, job_role, department, net_salary, allowance, telephone, qualification, national_id, address,social_insurance)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)"""
             cursor.execute(sql, (employe_id, name, job_role, department, net_salary, allowance, telephone,
-                                 qualification, national_id, address))
+                                 qualification, national_id, address,social_insurance))
             connection.commit()
 
             flash('Employee added successfully!', 'success')  # Flash success message
@@ -70,7 +71,7 @@ def update_employe():
         new_value = request.form['newValue']
 
         # Determine which column to update based on the cell index
-        columns = ['employe_id', 'name', 'department', 'job_role', 'qualification', 'national_id', 'address', 'telephone', 'hire_date', 'net_salary', 'allowance']
+        columns = ['employe_id', 'name', 'department', 'job_role', 'qualification', 'national_id', 'address', 'telephone', 'hire_date', 'net_salary', 'allowance','social_insurance']
         column_to_update = columns[int(cell_index)]
 
         # Prepare and execute the SQL UPDATE statement
@@ -123,7 +124,7 @@ def view_employes():
 
             select employe_id , name , department , job_role ,
                     qualification , national_id , address , telephone , hire_date ,
-                   net_salary , allowance from employes """)
+                   net_salary , allowance,social_insurance from employes """)
     results = cursor.fetchall()
     return render_template('admin/view_employes.html',number=number,results=results)
 
