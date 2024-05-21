@@ -493,13 +493,114 @@ def head_salaries():
 def month_salary():
     return render_template('admin/month_salary.html')
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@admin.route('/update_deduction',methods=['POST'])
+def update_deductions():
+    try:
+        cursor = connection.cursor()
+
+        # Fetch data from the form
+        employee_id = request.form['employeeId']
+        cell_index = request.form['cellIndex']
+        new_value = request.form['newValue']
+
+        # Determine which column to update based on the cell index
+        columns = ['employe_id', 'name', 'deduction_days', 'vacation_days', 'absent_days', 'late']
+        column_to_update = columns[int(cell_index)]
+
+        # Prepare and execute the SQL UPDATE statement
+        sql = f"UPDATE month_deductions SET {column_to_update} = ? WHERE employe_id = ?"
+        cursor.execute(sql, (new_value, employee_id))
+        connection.commit()
+
+        flash('deduction Updated successfully!', 'success') 
+    except Exception as e:
+        connection.rollback()
+        return f"Error: {e}"
+    finally:
+        cursor.close()
+    
+        return redirect(url_for('admin.deduction'))
+
+
+
+
+
 @admin.route('/deductions')
 def deduction():
-    return render_template('admin/deductions.html')
+    cursor.execute(""" 
+    select * from month_deductions     
+    """)
+    results = cursor.fetchall()
+    return render_template('admin/deductions.html',results=results)
+
+
+
+
+
+
+@admin.route('/update_administrative',methods=['POST'])
+def update_administrative():
+    try:
+        cursor = connection.cursor()
+
+        # Fetch data from the form
+        employee_id = request.form['employeeId']
+        cell_index = request.form['cellIndex']
+        new_value = request.form['newValue']
+
+        # Determine which column to update based on the cell index
+        columns = ['employe_id', 'name', 'admin_absent_value', 'admin_pen', 'admin_pen_value', 'deductions']
+        column_to_update = columns[int(cell_index)]
+
+        # Prepare and execute the SQL UPDATE statement
+        sql = f"UPDATE month_administrative SET {column_to_update} = ? WHERE employe_id = ?"
+        cursor.execute(sql, (new_value, employee_id))
+        connection.commit()
+
+        flash('administrative Updated successfully!', 'success') 
+    except Exception as e:
+        connection.rollback()
+        return f"Error: {e}"
+    finally:
+        cursor.close()
+    
+        return redirect(url_for('admin.administrative_cuts'))
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @admin.route('/administrative_cuts')
 def administrative_cuts():
-    return render_template('admin/administrative.html')
+    cursor.execute(""" 
+            select * from month_administrative
+            """)
+    results = cursor.fetchall()
+    return render_template('admin/administrative.html',results=results)
 
 @admin.route('/loans_insurance')
 def loans_insurance():

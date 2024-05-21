@@ -1,6 +1,199 @@
 {% extends 'base.html'%}
 
 {% block content %}
+<style>
+    body {
+        background-color: #ffeed6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
 
+    .logo-container {
+        margin-top: 50px;
+    }
+
+    .logo {
+        width: 200px;
+        height: auto;
+    }
+
+    .welcome-text {
+        font-size: 36px;
+        color: #333;
+        margin-top: 30px;
+    }
+
+    .cardBox {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 50px;
+        padding: 20px;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 20px;
+        background-color: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+        width: 300px;
+        height: 400px;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .cardName {
+        color: #007bff;
+        font-weight: bold;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .numbers {
+        color: #555;
+        font-size: 20px;
+    }
+
+    .logout-btn {
+        font-size: 20px;
+        margin-top: 50px;
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    /* Table styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+    }
+
+    th, td , tr {
+        padding: 15px; /* Increased padding for better spacing */
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+        font-size: 20px; /* Increased font size */
+        font-weight: bold; /* Bold font weight */
+    }
+
+    th {
+        background-color: #8b9474;
+        color: #fff;
+        font-size: 18px;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tbody tr:hover {
+        background-color: #ddd; /* Highlight row on hover */
+    }
+
+</style>
+
+<div class=" text-center logo-container">
+    <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
+    <h1 style="margin-bottom:30px"></h1>
+</div>
+
+<div class="attendance-user text-center">
+    <div class="all-attendance-user text-center">
+        <table id="administrative">
+            <thead>
+                <tr>
+                    <th>الرقم الوظيفي</th>
+                    <th>الاسم</th>
+                    <th> قيمة جزاء غياب</th>
+                    <th>جزاء اداري</th>
+                    <th>قيمة جزاء اداري</th>
+                    <th>خصومات</th>
+                    
+                  
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results %}
+                <tr>
+                    <td contenteditable="true">{{ row[0] }}</td>
+                    <td contenteditable="true">{{ row[1] }}</td>
+                    <td contenteditable="true">{{ row[2] }}</td>
+                    <td contenteditable="true">{{ row[3] }}</td>
+                    <td contenteditable="true">{{ row[4] }}</td>
+                    <td contenteditable="true">{{ row[5] }}</td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <form id="updateForm" action="{{ url_for('admin.update_administrative') }}" method="POST" style="display: none;">
+        <input type="hidden" name="employeeId" value="">
+        <input type="hidden" name="cellIndex" value="">
+        <input type="hidden" name="newValue" value="">
+    </form>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script>
+// Enable inline editing for table cells
+document.querySelectorAll('td[contenteditable=true]').forEach(cell => {
+    cell.addEventListener('click', function() {
+        this.setAttribute('contenteditable', 'true');
+    });
+    cell.addEventListener('blur', function() {
+        this.setAttribute('contenteditable', 'false');
+    });
+    cell.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent the default action of the Enter key
+            this.blur(); // Remove focus from the cell
+            updateCellValue(this); // Call function to update cell value
+        }
+    });
+});
+
+// Function to update cell value in the form and submit it
+function updateCellValue(cell) {
+    var form = document.getElementById('updateForm');
+    var rowIndex = cell.parentNode.rowIndex;
+    var cellIndex = cell.cellIndex;
+    var newValue = cell.textContent;
+    var employeeId = document.querySelectorAll('#administrative tbody tr')[rowIndex - 1].querySelector('td:first-child').textContent;
+
+    // Update the form fields with the new cell value and employee ID
+    form.elements['employeeId'].value = employeeId;
+    form.elements['cellIndex'].value = cellIndex;
+    form.elements['newValue'].value = newValue;
+
+    // Submit the form
+    form.submit();
+}
+</script>
 
 {% endblock content %}

@@ -88,27 +88,30 @@ check_mission int DEFAULT 0,
 check_per int DEFAULT 0 ) ;
 
 
+drop table month_deductions 
 
 -- month dedcutions table 
-create table month_deductions (employe_id int , 
-deduction_days int default 0 ,
-vacation_days int default 0 , 
-absent_days int default 0 ,
-late int default 0 , 
-total_deduction as (deduction_days + vacation_days + absent_days + late)
+create table month_deductions (employe_id int ,
+name nvarchar(max) , 
+deduction_days decimal(10,2) default 0 ,
+vacation_days decimal(10,2) default 0 , 
+absent_days decimal(10,2) default 0 ,
+late decimal(10,2) default 0 , 
+total_deduction as (deduction_days + vacation_days + absent_days + late),
+
 )
 
+drop table month_administrative 
 
 
 -- month administrative table
 create table month_administrative (employe_id int ,
-absent_ad int default 0, 
-administrative_de int default 0 ,
-payrol_cuts real default 0 , 
-loans real default 0 ,
-social_insurance real default 0 , 
-labor_box_office real default 0 )
-
+name nvarchar(max) , 
+admin_absent_value real default 0 , 
+admin_pen int default 0 , 
+admin_per_value real default 0 , 
+deductions real default 0 
+)
 
 
 -- month extra hours table
@@ -175,3 +178,17 @@ INSERT INTO calendar (date, day_name)
 SELECT date, DATENAME(weekday, date) AS day_name
 FROM Dates_CTE
 OPTION (MAXRECURSION 0);
+
+
+create table head_attendance (employe_id int , 
+						name nvarchar(max) , 
+						job_role nvarchar(max), 
+						day nvarchar(max) , 
+						date date , 
+						check_in time , 
+						check_out time , 
+						check_in_per decimal (10,2) default 0,
+						check_out_per decimal(10,2) default 0 , 
+						extra_hours decimal (10,2) default 0 , 
+						check_vacation decimal (10,2) default 0 , 
+						check_mission decimal (10,2) default 0)
