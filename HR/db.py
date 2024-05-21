@@ -3,7 +3,7 @@ from zk import ZK , const
 import pandas as pd 
 from sqlalchemy import create_engine
 from datetime import datetime , timedelta
-connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-6RVJEGB;DATABASE=HR;Trusted_Connection=yes;')
+connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-RNTE44E;DATABASE=HR;Trusted_Connection=yes;')
 cursor = connection.cursor()
 
 
@@ -14,7 +14,7 @@ def connect_to_zkteco():
 
 
 
-    DB = {'servername':'DESKTOP-6RVJEGB',
+    DB = {'servername':'DESKTOP-RNTE44E',
             'database':'HR',
             'driver':'driver=SQL Server Native Client 11.0'}
 
@@ -186,39 +186,10 @@ def connect_to_zkteco():
 
     """)
     connection.commit()
-    # cursor.execute(""" 
-    #                 UPDATE month_report
-    #     SET 
-    #         check_in = z.check_in,
-    #         check_out = z.check_out,
-    #         check_in_per = z.check_in_per,
-    #         check_out_per = z.check_out_per,
-    #         check_extra_minutes = z.extra_minutes
-            
-    #     FROM month_report mr
-    #     INNER JOIN zktecoAll z ON mr.employe_id = z.employe_id AND mr.date = z.date
+    
 
-    #         """)
-    # connection.commit()
 
-    # cursor.execute(""" 
-            
-    #         UPDATE mr
-    #             SET 
-    #                 mr.check_mission = m.status,
-    #                 mr.check_vacation = CASE WHEN vr.employe_id IS NOT NULL THEN 1 ELSE 0 END,
-    #                 mr.check_per = CASE 
-    #                                     WHEN mr.check_in_per <> 0 AND mr.check_out_per = 0 AND mr.check_mission = 0 AND mr.check_vacation = 0 
-    #                                     THEN mr.check_in_per
-    #                                     ELSE mr.check_per
-    #                                 END
-    #             FROM month_report mr
-    #             LEFT JOIN missions m ON mr.employe_id = m.employe_id AND mr.date = m.date
-    #             LEFT JOIN vacation_requests vr ON mr.employe_id = vr.employe_id AND mr.date BETWEEN vr.from_date AND vr.to_date;
-
-    #             """)
-    # connection.commit()
-
+    
 
 
 def current_month_report():
@@ -358,15 +329,16 @@ def update_month_report():
     if current_day >= 26:
         start_date = datetime(current_year, current_month, 26)
         end_date = start_date + timedelta(days=30)
-    cursor.execute("EXEC InsertIntoMonthReportFromZktecoAll")
-    cursor.execute("EXEC UpdateNameAndDayInMonthReport")
-    cursor.execute("EXEC UpdateMissionsInMonthReport")
-    cursor.execute("EXEC UpdateVacationRequestsInMonthReport")
-    cursor.execute("EXEC InsertValuesIntoCurrentMonthReport ?, ?", start_date, end_date)
+    print(start_date,end_date)
+    cursor.execute("EXEC InsertValuesIntoMonthReport ?, ?", start_date, end_date)
+    # cursor.execute("EXEC InsertIntoMonthReportFromZktecoAll")
+    # cursor.execute("EXEC UpdateNameAndDayInMonthReport")
+    # cursor.execute("EXEC UpdateMissionsInMonthReport")
+    # cursor.execute("EXEC UpdateVacationRequestsInMonthReport")
+    # cursor.execute("EXEC InsertValuesIntoCurrentMonthReport ?, ?", start_date, end_date)
 
     connection.commit()
     
 
+update_month_report()
 
-# update_month_report()
-connect_to_zkteco()
