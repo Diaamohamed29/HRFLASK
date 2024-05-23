@@ -180,6 +180,9 @@ FROM Dates_CTE
 OPTION (MAXRECURSION 0);
 
 
+drop table head_attendance 
+
+
 create table head_attendance (employe_id int , 
 						name nvarchar(max) , 
 						job_role nvarchar(max), 
@@ -191,4 +194,40 @@ create table head_attendance (employe_id int ,
 						check_out_per decimal(10,2) default 0 , 
 						extra_hours decimal (10,2) default 0 , 
 						check_vacation decimal (10,2) default 0 , 
-						check_mission decimal (10,2) default 0)
+						check_mission decimal (10,2) default 0,
+							check_per decimal (10,2) default 0)
+
+create table head_payroll (employe_id int , 
+							name nvarchar(max) , 
+							job_role nvarchar(max) ,  
+							net_salary real , 
+							allowance real , 
+							extra_hours decimal(10,2) default 0 ,
+							extra_hours_value real , 
+							total_salary real , 
+							deduction_days int default 0 , 
+							vacation_days int default 0 , 
+							absent_days int default 0,
+							late decimal (10,2) default 0 ,
+							total_deduction decimal (10,2) default 0 , 
+							total_deduction_value real default 0 ,
+							total_net real , 
+							administrative_absent_value real default 0 , 
+							administrative_pen int default 0  , 
+							administrative_pen_value real default 0 , 
+							deductions real default 0 , 
+							loans real default 0, 
+							social_insurance real default 0 , 
+							labor_box real default 0, 
+							suspended real default 0,
+							total_net_salary real , 
+							payment_way nvarchar(max) )
+							 
+
+
+create table month_loans_insurance (employe_id int , 
+									name nvarchar(max) , 
+									loans real default 0 , 
+									social_insurance real default 0 , 
+									labor_box real default 0,
+									suspended real default 0 )

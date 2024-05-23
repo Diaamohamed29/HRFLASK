@@ -3,7 +3,7 @@ from zk import ZK , const
 import pandas as pd 
 from sqlalchemy import create_engine
 from datetime import datetime , timedelta
-connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-P1V3K1G;DATABASE=HR;Trusted_Connection=yes;')
+connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-P1V3K1G;DATABASE=Professional_HR;Trusted_Connection=yes;')
 cursor = connection.cursor()
 
 
@@ -15,7 +15,7 @@ def connect_to_zkteco():
 
 
     DB = {'servername':'DESKTOP-P1V3K1G',
-            'database':'HR',
+            'database':'Professional_HR',
             'driver':'driver=SQL Server Native Client 11.0'}
 
     engine = create_engine('mssql+pyodbc://' + DB['servername'] + '/' + DB['database'] + "?" + DB['driver'])
@@ -194,16 +194,32 @@ def connect_to_zkteco():
 
     cursor.execute(""" 
 
-    UPDATE zktecoAll
-    SET 
-        extra_minutes = CASE 
-                        WHEN check_out BETWEEN '17:15:00' AND '23:59:00' THEN 
-                            DATEDIFF(MINUTE, '17:00:00', CASE WHEN check_out < '23:59:00' THEN check_out ELSE '23:59:00' END) 
-                        ELSE 
-                            0 
-                    END
-        WHERE 
-        check_out IS NOT NULL;
+UPDATE zktecoAll
+SET 
+    extra_minutes = 
+        CASE 
+            -- For employe_id 146, 120, 507
+            WHEN employe_id IN (146, 120, 507) THEN
+                CASE 
+                    WHEN check_out BETWEEN '17:15:00' AND '23:59:00' THEN 
+                        DATEDIFF(MINUTE, '17:00:00', check_out) 
+                    ELSE 
+                        0 
+                END
+            -- For employe_id 273, 470
+            WHEN employe_id IN (273, 470) THEN
+                CASE 
+                    WHEN check_out BETWEEN '18:00:00' AND '23:59:00' THEN 
+                        DATEDIFF(MINUTE, '17:00:00', check_out) 
+                    ELSE 
+                        0 
+                END
+            -- For all other employe_id
+            ELSE
+                0
+        END
+WHERE 
+    check_out IS NOT NULL;
 
     """)
     connection.commit()
@@ -234,6 +250,7 @@ def connect_to_zkteco():
     cursor.execute("EXEC InsertIntoHeadPayroll")
     cursor.execute("EXEC UpdateExtraHoursInHeadPayroll")
     cursor.execute("EXEC UpdateExtraHoursValueInHeadPayroll")
+    cursor.execute("EXEC UpdateHeadPayroll")
     connection.commit()
 
 
@@ -242,4 +259,4 @@ def connect_to_zkteco():
 
 
 
-# connect_to_zkteco()
+connect_to_zkteco()

@@ -477,18 +477,19 @@ def update_salaries():
     
         return redirect(url_for('admin.head_salaries'))
 
+
+## رواتب االادارة
 @admin.route('/head_salaries')
 def head_salaries():
-    # connect_to_zkteco()
-    # month_report()
+
     cursor.execute(""" 
             select employe_id , name , department , job_role , net_salary  ,
-                   allowance , total_net from salaries 
+                   allowance , total_net_salary from salaries 
             """)
     results = cursor.fetchall()
     return render_template('admin/head_salaries.html',results=results)
 
-
+## رواتب الشهر الحالي 
 @admin.route('/month_salary')
 def month_salary():
     return render_template('admin/month_salary.html')
@@ -602,8 +603,61 @@ def administrative_cuts():
     results = cursor.fetchall()
     return render_template('admin/administrative.html',results=results)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@admin.route('/update_loans_insurance',methods=['POST'])
+def update_loans_insurance():
+    try:
+        cursor = connection.cursor()
+
+        # Fetch data from the form
+        employee_id = request.form['employeeId']
+        cell_index = request.form['cellIndex']
+        new_value = request.form['newValue']
+
+        # Determine which column to update based on the cell index
+        columns = ['employe_id', 'name', 'loans', 'social_insurance', 'labor_box', 'suspended']
+        column_to_update = columns[int(cell_index)]
+
+        # Prepare and execute the SQL UPDATE statement
+        sql = f"UPDATE month_loans_insurance SET {column_to_update} = ? WHERE employe_id = ?"
+        cursor.execute(sql, (new_value, employee_id))
+        connection.commit()
+
+        flash('loans&insurance Updated successfully!', 'success') 
+    except Exception as e:
+        connection.rollback()
+        return f"Error: {e}"
+    finally:
+        cursor.close()
+    
+        return redirect(url_for('admin.loans_insurance'))
+
+
+
+
+
+
+
 @admin.route('/loans_insurance')
 def loans_insurance():
-    return render_template('admin/loans_insurance.html')
+    cursor.execute("select * from month_loans_insurance")
+    results = cursor.fetchall()
+    return render_template('admin/loans_insurance.html',results=results)
+
+
 
 ### END SALARIES PAGE ###

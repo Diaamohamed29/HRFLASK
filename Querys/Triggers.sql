@@ -1,0 +1,124 @@
+
+
+-- DELETE TIRGGER FOR EMPLOYES TABLE --
+
+CREATE TRIGGER trg_delete_employe
+ON employes
+AFTER DELETE
+AS
+BEGIN
+    -- Delete from vacations table
+    DELETE FROM vacations
+    WHERE employe_id IN (SELECT employe_id FROM deleted);
+	-- DELETE from missions 
+	DELETE from missions 
+	where employe_id in (select employe_id from deleted);
+
+	-- DELETE from vacation requests table 
+	delete from vacation_requests 
+	where employe_id in (select employe_id from deleted);
+
+    -- Delete from salaries table
+    DELETE FROM salaries
+    WHERE employe_id IN (SELECT employe_id FROM deleted);
+
+
+	-- Delete from month_deductions 
+	DELETE FROM month_deductions 
+	where employe_id in (select employe_id from deleted);
+
+
+	-- Delete from month_administrative
+	DELETE FROM month_administrative
+	where employe_id in (select employe_id from deleted);
+
+	-- DELETE from month_loans_insurance 
+	DELETE FROM month_loans_insurance 
+	where employe_id in (select employe_id from deleted);
+
+
+	
+
+
+
+
+
+END;
+
+GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TRIGGER trg_insert_employe
+ON employes
+AFTER INSERT
+AS
+BEGIN
+IF EXISTS (SELECT 1 FROM employes e WHERE e.employe_id IN (SELECT employe_id FROM inserted))
+    -- Insert into vacations table
+    INSERT INTO vacations (employe_id, name)
+    SELECT employe_id, name FROM inserted;
+    
+	-- insert into user_ table 
+	INSERT INTO user_(username) 
+	SELECT employe_id from inserted ;
+
+    -- Insert into salaries table
+    INSERT INTO salaries (employe_id, name, department, job_role, net_salary, allowance)
+    SELECT employe_id, name, department, job_role, net_salary, allowance FROM inserted;
+
+
+	-- insert into month_administrative
+	insert into month_administrative (employe_id ,name)
+	select employe_id,name from inserted ; 
+
+	-- insert into month_deduction 
+	insert into month_deductions (employe_id,name) 
+	select employe_id,name from inserted ;
+
+	
+	-- insert into month_loans_insurance table 
+	insert into month_loans_insurance (employe_id,name,social_insurance) 
+	select employe_id,name,social_insurance from inserted ;
+
+
+
+
+END;
+
+GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
