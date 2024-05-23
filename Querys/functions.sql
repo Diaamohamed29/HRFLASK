@@ -105,8 +105,8 @@ BEGIN
     UPDATE head_attendance 
     SET check_per = 
         CASE 
-            WHEN check_mission = 0 AND check_vacation = 0 AND check_out_per = 0 AND name != 'total' THEN check_in_per
-            WHEN check_mission = 0 AND check_vacation = 0 AND check_in_per = 0 AND name != 'total' THEN check_out_per
+            WHEN check_mission = 0 AND check_vacation = 0 AND check_out_per = 0 AND check_extra_day = 0 AND name != 'total' THEN check_in_per
+            WHEN check_mission = 0 AND check_vacation = 0 AND check_in_per = 0 AND check_extra_day = 0 AND name != 'total' THEN check_out_per
             ELSE 0
         END;
 

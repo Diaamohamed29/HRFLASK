@@ -199,7 +199,7 @@ SET
     extra_minutes = 
         CASE 
             -- For employe_id 146, 120, 507
-            WHEN employe_id IN (146, 120, 507,498) THEN
+            WHEN employe_id IN (146, 120, 507,498) and day != 'Friday' and day != 'Saturday' THEN
                 CASE 
                     WHEN check_out BETWEEN '17:15:00' AND '23:59:00' THEN 
                         DATEDIFF(MINUTE, '17:00:00', check_out) 
@@ -207,7 +207,7 @@ SET
                         0 
                 END
             -- For employe_id 273, 470
-            WHEN employe_id IN (273, 470) THEN
+            WHEN employe_id IN (273, 470) and day != 'Friday' and day != 'Saturday' THEN
                 CASE 
                     WHEN check_out BETWEEN '18:00:00' AND '23:59:00' THEN 
                         DATEDIFF(MINUTE, '17:00:00', check_out) 
@@ -246,6 +246,7 @@ WHERE
     cursor.execute("EXEC InsertValuesIntoHeadAttendance ?, ?",(start_date,end_date))
     cursor.execute("EXEC UpdateVacationRequestsInHeadAttendance")
     cursor.execute("EXEC UpdateMissionsInHeadAttendance")
+    cursor.execute("EXEC UpdateExtraDaysInHeadAttendance")
     cursor.execute("EXEC UpdateCheckPerInHeadAttendance")
     cursor.execute("EXEC InsertIntoHeadPayroll")
     cursor.execute("EXEC UpdateExtraHoursInHeadPayroll")
@@ -259,4 +260,4 @@ WHERE
 
 
 
-# connect_to_zkteco()
+connect_to_zkteco()

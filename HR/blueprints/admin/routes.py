@@ -478,6 +478,40 @@ def update_salaries():
         return redirect(url_for('admin.head_salaries'))
 
 
+
+
+## حضور وانصراف الشهر 
+@admin.route('/head_attendance')
+def head_attendance():
+    cursor.execute(""" 
+        select employe_id , 
+                name , 
+                   job_role , 
+                   day , 
+                   date , 
+                   check_in , 
+                   check_out , 
+                   check_per , 
+                   extra_hours , 
+                   check_mission , 
+                   check_vacation
+                   From head_attendance where name != 'total' order by employe_id , date
+            """)
+    results = cursor.fetchall()
+    cursor.execute("""SELECT DISTINCT name FROM head_attendance where name != 'Total' """)
+    all_employes = [emp[0] for emp in cursor.fetchall()]
+    return render_template('admin/head_attendance.html',results=results,all_employes=all_employes)
+
+
+
+
+
+
+
+
+
+
+
 ## رواتب االادارة
 @admin.route('/head_salaries')
 def head_salaries():
@@ -492,7 +526,11 @@ def head_salaries():
 ## رواتب الشهر الحالي 
 @admin.route('/month_salary')
 def month_salary():
-    return render_template('admin/month_salary.html')
+    cursor.execute(""" 
+        select * from head_payroll
+        """)
+    results = cursor.fetchall()
+    return render_template('admin/month_salary.html',results=results)
 
 
 
