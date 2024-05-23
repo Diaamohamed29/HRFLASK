@@ -238,3 +238,15 @@ END;
 
 
 
+
+CREATE PROCEDURE UpdateExtraDaysInHeadAttendance
+AS
+BEGIN
+    UPDATE head_attendance
+    SET head_attendance.check_extra_day = month_extra_days.status
+    FROM head_attendance
+    JOIN month_extra_days ON head_attendance.date = month_extra_days.date
+                          AND head_attendance.employe_id = month_extra_days.employe_id;
+END;
+
+
