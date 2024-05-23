@@ -199,7 +199,7 @@ SET
     extra_minutes = 
         CASE 
             -- For employe_id 146, 120, 507
-            WHEN employe_id IN (146, 120, 507) THEN
+            WHEN employe_id IN (146, 120, 507,498) THEN
                 CASE 
                     WHEN check_out BETWEEN '17:15:00' AND '23:59:00' THEN 
                         DATEDIFF(MINUTE, '17:00:00', check_out) 
@@ -259,4 +259,4 @@ WHERE
 
 
 
-connect_to_zkteco()
+# connect_to_zkteco()

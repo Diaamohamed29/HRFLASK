@@ -654,10 +654,61 @@ def update_loans_insurance():
 
 @admin.route('/loans_insurance')
 def loans_insurance():
-    cursor.execute("select * from month_loans_insurance")
-    results = cursor.fetchall()
-    return render_template('admin/loans_insurance.html',results=results)
+    # cursor.execute("select * from month_loans_insurance")
+    # results = cursor.fetchall()
+    return render_template('admin/loans_insurance.html')
 
 
+
+@admin.route('/add_extra_days',methods=['POST','GET'])
+def add_extra_days():
+    if request.method == 'GET':
+        cursor = connection.cursor()  # Initialize cursor
+        try:
+            cursor.execute("""SELECT employe_id FROM employes""")
+            all_employes = [emp[0] for emp in cursor.fetchall()]
+            return render_template('admin/extra_days.html', all_employes=all_employes)
+        except Exception as e:
+            return f"Error: {e}"
+        finally:
+            cursor.close()  # Close cursor after execution
+    elif request.method == 'POST':
+        try:
+            cursor = connection.cursor()  # Initialize cursor
+
+            # Fetch form data
+            employee_id = request.form['employe_id']
+            date = request.form['date']
+            reason = request.form['reason']
+            extra_days = request.form['extra_days']
+            status = 1
+
+            # Prepare and execute SQL INSERT statement
+            sql = """INSERT INTO month_extra_days (employe_id, date,extra_days, reason,status)
+                     VALUES (?, ?, ?, ?,?)"""
+            cursor.execute(sql, (employee_id, date,extra_days, reason,status))
+            connection.commit()
+            cursor.execute(""" 
+                    update month_extra_days 
+                           set name = (select name from employes where employe_id = month_extra_days.employe_id),
+                                job_role = (select job_role from employes where employe_id = month_extra_days.employe_id),
+                                department = (select department from employes where employe_id = month_extra_days.employe_id)
+                """)
+            connection.commit()
+            flash('extra Day added successfully!', 'success')  # Flash success message
+            return redirect(url_for('admin.extra_days'))  # Redirect to the same page after adding the mission
+        except Exception as e:
+            connection.rollback()  # Rollback the transaction if an error occurs
+            return f"Error: {e}"
+        finally:
+            cursor.close()  # Close cursor after execution
+
+
+@admin.route('/extra_days')
+def extra_days():
+
+    cursor.execute("""SELECT employe_id FROM employes""")
+    all_employes = [emp[0] for emp in cursor.fetchall()]
+    return render_template('admin/extra_days.html',all_employes=all_employes)
 
 ### END SALARIES PAGE ###
