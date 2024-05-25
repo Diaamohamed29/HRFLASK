@@ -3,7 +3,7 @@ from zk import ZK , const
 import pandas as pd 
 from sqlalchemy import create_engine
 from datetime import datetime , timedelta
-connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-P1V3K1G;DATABASE=Professional_HR;Trusted_Connection=yes;')
+connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-P1V3K1G;DATABASE=HR;Trusted_Connection=yes;')
 cursor = connection.cursor()
 
 
@@ -15,7 +15,7 @@ def connect_to_zkteco():
 
 
     DB = {'servername':'DESKTOP-P1V3K1G',
-            'database':'Professional_HR',
+            'database':'HR',
             'driver':'driver=SQL Server Native Client 11.0'}
 
     engine = create_engine('mssql+pyodbc://' + DB['servername'] + '/' + DB['database'] + "?" + DB['driver'])
@@ -66,7 +66,7 @@ def connect_to_zkteco():
 
     cursor.execute(""" 
         update zktecoAll
-                   set day = (select day_name from calendar where date = zktecoAll.date)
+                   set day = (select day_name from calendar where date = zktecoAll.Date)
 
         """)
     connection.commit()
@@ -224,6 +224,19 @@ WHERE
     """)
     connection.commit()
     
+
+        
+    # 
+    # cursor.execute("EXEC UpdateVacationRequestsInHeadAttendance")
+    # cursor.execute("EXEC UpdateMissionsInHeadAttendance")
+    # cursor.execute("EXEC UpdateExtraDaysInHeadAttendance")
+    # cursor.execute("EXEC UpdateCheckPerInHeadAttendance")
+  
+    # connection.commit()
+
+def head_attendance():
+
+
     # Get current date and time
     current_datetime = datetime.now()
 
@@ -242,22 +255,23 @@ WHERE
     if current_day >= 26:
         start_date = datetime(current_year, current_month, 26)
         end_date = start_date + timedelta(days=30)
-        
+
     cursor.execute("EXEC InsertValuesIntoHeadAttendance ?, ?",(start_date,end_date))
     cursor.execute("EXEC UpdateVacationRequestsInHeadAttendance")
     cursor.execute("EXEC UpdateMissionsInHeadAttendance")
     cursor.execute("EXEC UpdateExtraDaysInHeadAttendance")
     cursor.execute("EXEC UpdateCheckPerInHeadAttendance")
+
+    connection.commit()
+
+
+def head_payroll():
     cursor.execute("EXEC InsertIntoHeadPayroll")
     cursor.execute("EXEC UpdateExtraHoursInHeadPayroll")
     cursor.execute("EXEC UpdateExtraHoursValueInHeadPayroll")
     cursor.execute("EXEC UpdateHeadPayroll")
+
+
     connection.commit()
 
 
-    
-
-
-
-
-connect_to_zkteco()

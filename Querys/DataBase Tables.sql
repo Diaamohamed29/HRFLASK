@@ -88,7 +88,7 @@ check_mission int DEFAULT 0,
 check_per int DEFAULT 0 ) ;
 
 
-drop table month_deductions 
+
 
 -- month dedcutions table 
 create table month_deductions (employe_id int ,
@@ -101,7 +101,6 @@ total_deduction as (deduction_days + vacation_days + absent_days + late),
 
 )
 
-drop table month_administrative 
 
 
 -- month administrative table
@@ -180,7 +179,6 @@ FROM Dates_CTE
 OPTION (MAXRECURSION 0);
 
 
-drop table head_attendance 
 
 
 create table head_attendance (employe_id int , 
