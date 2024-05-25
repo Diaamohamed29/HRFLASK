@@ -259,8 +259,8 @@ def head_attendance():
     cursor.execute("EXEC InsertValuesIntoHeadAttendance ?, ?",(start_date,end_date))
     cursor.execute("EXEC UpdateVacationRequestsInHeadAttendance")
     cursor.execute("EXEC UpdateMissionsInHeadAttendance")
-    cursor.execute("EXEC UpdateExtraDaysInHeadAttendance")
-    cursor.execute("EXEC UpdateCheckPerInHeadAttendance")
+    # cursor.execute("EXEC UpdateExtraDaysInHeadAttendance")
+    # cursor.execute("EXEC UpdateCheckPerInHeadAttendance")
 
     connection.commit()
 
@@ -275,3 +275,5 @@ def head_payroll():
     connection.commit()
 
 
+connect_to_zkteco()
+head_attendance()
