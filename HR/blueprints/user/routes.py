@@ -59,7 +59,7 @@ def attendance():
         start_date = (datetime(current_year, current_month, 26)).date()
         end_date = (datetime(current_year, current_month, 25) + timedelta(days=30)).date()
 
-    query = "SELECT DISTINCT employe_id  , date , check_in , check_out,check_in_per,check_out_per  FROM zktecoAll  WHERE employe_id = ? and date between ? and ? ORDER BY date"
+    query = "SELECT DISTINCT employe_id  , Date , check_in , check_out,check_in_per,check_out_per  FROM zktecoAll  WHERE employe_id = ? and Date between ? and ? ORDER BY Date"
     cursor.execute(query, (int(username),str(start_date),str(end_date),))
     results = cursor.fetchall()
     

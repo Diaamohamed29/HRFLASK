@@ -61,25 +61,43 @@
   .attendance-user .all-attendance-user table td{
     font-size:medium;
   }
-  
-  .attendance-container-user {
-    
-    width:auto;
-    background-color:#ffeed6;
-    padding: 100px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    margin: 10px;
-    border-radius: 10px;
-  }
-  
-  .all-attendance-user .btn{
-    padding:10px;
-  } 
+  .attendance-container-user h1 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+        display: inline-block;
+    }
 
+    /* Add more styles for form elements, labels, and buttons as needed */
 
+    .attendance-container-user .form-group {
+        margin-bottom: 20px;
+    }
+
+    .attendance-container-user label {
+        font-size: 18px;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .attendance-container-user select,
+    .attendance-container-user input[type="date"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    .attendance-container-user .button-container {
+        text-align: right;
+    }
+
+    .attendance-container-user .btn {
+        font-size: 18px;
+        padding: 10px 20px;
+        margin-left: 10px;}
     .logout-btn {
         font-size: 20px;
         margin-top: 50px;
@@ -151,8 +169,8 @@
             <form action="submit_attendance" method="POST" class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="employeid">Select Employe</label>
-                        <select class="form-control" id="employeid" name="employeid">
+                        <label for="employeid">اختر موظف</label>
+                        <select class="form-control"  style="height:45px" id="employeid" name="employeid">
                             <option value='all'>All Employes</option>
                             {% for employee in all_employes %}
                             <option value="{{ employee }}">{{ employee }}</option>
@@ -162,13 +180,13 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="fromDate">From Date:</label>
+                        <label for="fromDate">من تاريخ</label>
                         <input type="date" class="form-control" id="fromDate" name="fromDate">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="toDate">To Date:</label>
+                        <label for="toDate">الي تاريخ</label>
                         <input type="date" class="form-control" id="toDate" name="toDate">
                     </div>
                 </div>
@@ -203,7 +221,10 @@
                 {% endfor %}
             </tbody>
         </table>
-
+        <div class="text-right mt-2 pr-8">
+            <a href="{{url_for('admin.index')}}" class="btn btn-danger" style="margin-top: 300px;">رجوع</a>
+          </div>
+          
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 <script>
             document.getElementById('exportBtn').addEventListener('click', function() {

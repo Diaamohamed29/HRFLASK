@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #ffeed6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        text-align: center;
+        margin-top: 100px;
+    }
+</style>
+
+<div class="container">
+    <h1>Can not Connect to Zkteco Attendance Device</h1>
+</div>
+
+<script>
+    // Redirect back to the requested URL after 5 seconds
+    setTimeout(function() {
+        var requestedUrl = "{{ requested_url }}";
+        window.location.href = requestedUrl;
+    }, 5000);
+</script>
+
+{% endblock content %}

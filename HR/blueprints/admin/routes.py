@@ -1,5 +1,6 @@
 from flask import request , render_template , redirect , url_for , Blueprint,session,jsonify,flash
 from HR.db import connection , cursor ,connect_to_zkteco
+from zk.exception import ZKNetworkError
 from datetime import datetime , timedelta
 
 
@@ -13,7 +14,6 @@ admin = Blueprint("admin", __name__, template_folder="templates")
 def index():
     return render_template('admin/index.html')
 ### END ADMIN PAGE ###
-
 
 ### EMPLOYES PAGES ###
 
@@ -153,9 +153,9 @@ def submit_attendance():
     to_date = request.form['toDate']
 
     if employe_id == 'all':
-        cursor.execute('SELECT employe_id, date, check_in, check_out FROM zktecoAll WHERE date BETWEEN ? AND ? ', (from_date, to_date))
+        cursor.execute('SELECT employe_id, Date, check_in, check_out FROM zktecoAll WHERE Date BETWEEN ? AND ? ', (from_date, to_date))
     else:
-        cursor.execute('SELECT  employe_id, date, check_in, check_out FROM zktecoAll WHERE employe_id = ? AND date BETWEEN ? AND ? ', (employe_id, from_date, to_date))
+        cursor.execute('SELECT  employe_id, Date, check_in, check_out FROM zktecoAll WHERE employe_id = ? AND Date BETWEEN ? AND ? ', (employe_id, from_date, to_date))
     results = cursor.fetchall()
 
 
@@ -165,16 +165,16 @@ def submit_attendance():
 
 @admin.route('/attendance')
 def attendance():
-    connect_to_zkteco()
-    cursor.execute("SELECT DISTINCT employe_id from zktecoAll")
-    all_employes = cursor.fetchall()
-    all_employes = [emp[0] for emp in all_employes]
-    print(all_employes)
-    
-
-
-    return render_template('admin/attendance.html',all_employes=all_employes)
-
+    try:
+        connect_to_zkteco()
+        cursor.execute("SELECT DISTINCT employe_id from zktecoAll")
+        all_employes = cursor.fetchall()
+        all_employes = [emp[0] for emp in all_employes]
+        return render_template('admin/attendance.html',all_employes=all_employes)
+     # Or redirect to a different page if needed
+    except ZKNetworkError as e:
+        return render_template('error.html', error=str(e), requested_url=request.url), 500
+   
 
 ### END ATTENDANCE PAGE ###
 
