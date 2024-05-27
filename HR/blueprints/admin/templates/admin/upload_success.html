@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+    <meta http-equiv="refresh" content="5;url={{ url_for('admin.reports') }}">
+</head>
+
+<h1>Upload Success</h1>
+<p>You will be redirected to the previous page in 5 seconds...</p>
+
+{% endblock content %}

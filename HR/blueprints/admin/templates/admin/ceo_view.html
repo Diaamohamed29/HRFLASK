@@ -1,0 +1,71 @@
+{% extends 'base.html'%}
+
+
+
+{% block content %}
+<head>
+    <style>
+   /* Set body and html height to 100% */
+   body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+        
+        /* Set slideshow container to full height */
+        .container {
+            height: 100%;
+        }
+        
+        /* Set image height to 100vh (viewport height) */
+        .slideshow-img {
+            height: 100vh;
+            width: auto; /* Maintain aspect ratio */
+            display: block; /* Make image a block element */
+            margin: 0 auto; /* Center image horizontally */
+        }
+    </style>
+</head>
+<div class="container">
+    <div id="slideshow">
+        {% for image_filename in image_filenames %}
+            <img src="{{ url_for('static', filename='uploads/' + image_filename) }}" class="slideshow-img" alt="Page">
+            {% endfor %}
+    </div>
+</div>
+
+
+
+
+<script>
+    // Get all slideshow images
+    var images = document.querySelectorAll('.slideshow-img');
+
+    // Initialize index for current image
+    var currentIndex = 0;
+
+    // Function to show the next image
+    function showNextImage() {
+        // Hide the current image
+        images[currentIndex].style.display = 'none';
+
+        // Increment index to show the next image
+        currentIndex = (currentIndex + 1) % images.length;
+
+        // Show the next image
+        images[currentIndex].style.display = 'block';
+    }
+
+    // Function to start the slideshow
+    function startSlideshow() {
+        // Show the first image
+        images[currentIndex].style.display = 'block';
+
+        // Set interval to switch images every 5 seconds
+        setInterval(showNextImage, 5000);
+    }
+
+    // Start the slideshow when the page loads
+    window.onload = startSlideshow;
+</script>
+{% endblock content %}

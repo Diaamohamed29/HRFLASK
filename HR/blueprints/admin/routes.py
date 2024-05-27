@@ -2,11 +2,15 @@ from flask import request , render_template , redirect , url_for , Blueprint,ses
 from HR.db import connection , cursor ,connect_to_zkteco
 from zk.exception import ZKNetworkError
 from datetime import datetime , timedelta
+import fitz
+import os 
+from flask import current_app
 
 
-admin = Blueprint("admin", __name__, template_folder="templates")
 
 
+
+admin = Blueprint("admin", __name__, template_folder="templates",static_folder='static')
 
 
 ### MAIN ADMIN PAGE
@@ -407,13 +411,94 @@ def mission_requests():
 ### END MISSIONS PAGE ###
 
 
+@admin.route('/ceo_view')
+def ceo_view():
+    with current_app.app_context():
+        # Ensure that the UPLOAD_FOLDER configuration is set
+        if 'UPLOAD_FOLDER' not in current_app.config:
+            return "UPLOAD_FOLDER configuration is not set!", 500
+        
+        UPLOAD_FOLDER = current_app.config['UPLOAD_FOLDER']
+        pdf_files = [f for f in os.listdir(UPLOAD_FOLDER) if f.endswith('.pdf')]
+
+        # Convert PDF pages to images
+        image_filenames = []
+        for pdf_file in pdf_files:
+            pdf_path = os.path.join(UPLOAD_FOLDER, pdf_file)
+            image_filenames.extend(pdf_to_images(pdf_path, UPLOAD_FOLDER))
+        
+        # Printing image filenames for verification
+        for image in image_filenames:
+            print(image)
+    return render_template('admin/ceo_view.html',image_filenames=image_filenames)
 
 
+def pdf_to_images(pdf_path, output_folder):
+    image_filenames = []
+    # Open the PDF file
+    pdf_document = fitz.open(pdf_path)
+
+    # Iterate through each page
+    for page_number in range(len(pdf_document)):
+        # Get the page
+        page = pdf_document.load_page(page_number)
+        # Render the page as an image
+        pix = page.get_pixmap()
+        # Save the image
+        image_filename = os.path.join(output_folder, f'{os.path.splitext(os.path.basename(pdf_path))[0]}_page_{page_number}.png')
+        pix.save(image_filename)
+        image_filenames.append(os.path.basename(image_filename))
+
+    # Close the PDF document
+    pdf_document.close()
+
+    return image_filenames
+@admin.route('/upload_success')
+def upload_success():
+    return render_template('admin/upload_success.html')
 ### REPORTS PAGES ###
-@admin.route('/reports')
+@admin.route('/reports',methods=['POST','GET'])
 def reports():
+    if request.method == 'POST':
+        pdf_file = request.files['pdf_file']
+        if pdf_file :
+            pdf_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'],pdf_file.filename))
+            return redirect(url_for('admin.upload_success'))
     return render_template('admin/reports.html')
 ### END REPORT PAGE ###
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ### GAZ PAGE ###

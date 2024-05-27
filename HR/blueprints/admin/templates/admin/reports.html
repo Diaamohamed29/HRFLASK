@@ -1,31 +1,18 @@
-{% extends 'base.html'%}
+<!-- upload.html -->
+
+{% extends 'base.html' %}
 
 {% block content %}
-
-<head>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
-
-<style>
-body {
-  background-color: #ffeed6;
-  font-family: 'Open Sans', sans-serif;
-}
-</style>
-</head>
-
-<!-- Logo Section -->
-<div class=" text-center logo-container">
+<div class="container text-center logo-container">
     <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
-    <h1 style="margin-bottom:30px"></h1>
-</div>
-<div class="container">
+    
+
     <form action="" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="pdf_file">Upload PDF File</label>
-            <input type="file" class="form-control-file" id="pdf_file" name="pdf_file">
+            <input type="file" class="form-control-file" id="pdf_file" name="pdf_file" multiple>
         </div>
         <button type="submit" class="btn btn-success">Upload</button>
     </form>
 </div>
-</div>
-{% endblock content %}
+{% endblock %}
