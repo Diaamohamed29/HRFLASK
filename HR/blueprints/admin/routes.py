@@ -177,7 +177,7 @@ def attendance():
         return render_template('admin/attendance.html',all_employes=all_employes)
      # Or redirect to a different page if needed
     except ZKNetworkError as e:
-        return render_template('error.html', error=str(e), requested_url=request.url), 500
+        return render_template('admin/error.html', error=str(e), requested_url=request.url), 500
    
 
 ### END ATTENDANCE PAGE ###

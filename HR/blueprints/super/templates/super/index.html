@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .container-tables {
+        display: grid;
+        grid-template-columns: 75% 25%;; /* Two columns */
+        gap: 10px; /* Add some space between tables */
+        max-width: 100%; /* Make the container take the width of the page */
+        overflow-x: auto; /* Add horizontal scroll if needed */
+    }
+
+    .container-tables .table-wrapper {
+        overflow-y: auto; /* Add vertical scroll if needed */
+    }
+
+    table {
+        border-collapse: collapse;
+        border: 1px solid #ddd;
+        width: 100%; /* Make tables fill the entire column by default */
+    }
+
+    th,
+    td {
+        padding: 10px; /* Increase padding for better readability */
+        text-align: left;
+        font-size: 20px; /* Adjust font size to 20px */
+        border: 1px solid #ddd; /* Add border with solid style */
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        font-size: 16px; /* Increase font size of header to 16px */
+        color: #333; /* Header text color */
+    }
+
+    td {
+        background-color: #fff; /* Body background color */
+        color: #555; /* Body text color */
+    }
+
+    caption {
+        font-weight: bold;
+        font-size: 1.2em; /* Adjust font size as needed */
+        text-align: center; /* Center align the caption */
+        padding: 10px 0; /* Add some padding top and bottom */
+        caption-side: top; /* Move caption to the top */
+    }
+
+    /* Adjust the width of the first table and make it scrollable */
+    #table-1 {
+        width: 100%; /* Make the first table fill the entire column */
+        max-height: 600px; /* Set maximum height */
+        overflow-y: auto; /* Add vertical scroll */
+    }
+
+    /* Adjust the width of the second table */
+    #table-2 {
+        width: 100%; /* Make the second table fill the entire column */
+    }
+    #table-4 {
+        width:50%;
+    }
+    .next-button {
+        width: 100px; /* Set the width */
+        padding: 10px; /* Add padding */
+        background-color: #4CAF50; /* Green background color */
+        color: white; /* White text color */
+        border: none; /* Remove border */
+        border-radius: 5px; /* Add border radius */
+        cursor: pointer; /* Add cursor pointer */
+        float: right; /* Align to the right */
+        margin-top: 20px; /* Add margin top */
+    }
+
+    .next-button:hover {
+        background-color: #45a049; /* Darker green background color on hover */
+    }
+</style>
+
+
+<div class="container text-center logo-container">
+    <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
+    <h1 class="mt-5 pr-4">Welcome</h1>
+    <form id="employeeForm" action="{{ url_for('super.index') }}" method="POST">
+        <div class="form-group">
+            <label for="employeid">Select Employee</label>
+            <select class="form-control" id="employeid" name="employeid">
+                <option value='all'>All Employees</option>
+                {% for employee in all_employes %}
+                <option value="{{ employee }}">{{ employee }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <!-- <button class="btn btn-success" type="submit">Submit</button> -->
+    </form>
+</div>
+
+<div class="container-tables table-row-1">
+    <div class="table-wrapper">
+        <!-- Table 2 -->
+        <table id="table-2">
+            <caption>حضور وانصراف</caption>
+            <thead>
+                <tr>
+                    <th> الاسم</th>
+                    <th>اليوم</th>
+                    <th>التاريخ</th>
+                    <th>حضور</th>
+                    <th>انصراف</th>
+                    <th>ساعات اضافية</th>
+                    <th>اجازة</th>
+                    <th>مأمورية</th>
+                    <th>تأخيرات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in attendance_data %}
+                <tr>
+                    <td>{{ data[0] }}</td>
+                    <td>{{ data[1] }}</td>
+                    <td>{{ data[2] }}</td>
+                    <td>{{ data[3] }}</td>
+                    <td>{{ data[4] }}</td>
+                    <td>{{ data[5] }}</td>
+                    <td>{{ data[6] }}</td>
+                    <td>{{ data[7] }}</td>
+                    <td>{{ data[8] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-wrapper ">
+        <!-- Table 4 -->
+        <table id="table-4">
+            <caption>كارتة اجازات</caption>
+            <thead>
+                <tr>
+                    <th>الرقم الوظيفي</th>
+                    <th>الاسم</th>
+                    <th>اعتيادي</th>
+                    <th>عارضة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in vacations %}
+                <tr>
+                    <td>{{ data[0] }}</td>
+                    <td>{{ data[1] }}</td>
+                    <td>{{ data[2] }}</td>
+                    <td>{{ data[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="container-tables table-row-2">
+
+
+    <div class="table-wrapper">
+        <!-- Table 3 -->
+        <table id="table-3">
+            <caption>طلبات اجازة</caption>
+            <thead>
+                <tr>
+                    <th>الاسم</th>
+                    <th>التاريخ</th>
+                    <th>من تاريخ</th>
+                    <th>الي تاريخ</th>
+                    <th>عدد الايام</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in vacations_requests %}
+                <tr>
+                    <td>{{ data[0] }}</td>
+                    <td>{{ data[1] }}</td>
+                    <td>{{ data[2] }}</td>
+                    <td>{{ data[3] }}</td>
+                    <td>{{ data[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="table-wrapper">
+        <!-- Table 1 -->
+        <table id="table-1">
+            <caption>مأموريات</caption>
+            <thead>
+                <tr>
+                    <th>الاسم</th>
+                    <th>التاريخ</th>
+                    <th>من</th>
+                    <th>الي</th>
+                    <th>السبب</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in missions_data %}
+                <tr>
+                    <td>{{ data[0] }}</td>
+                    <td>{{ data[1] }}</td>
+                    <td>{{ data[2] }}</td>
+                    <td>{{ data[3] }}</td>
+                    <td>{{ data[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<button class="next-button">Next</button>
+</div>
+<script>
+    // JavaScript to automatically submit the form when employee ID is selected
+    document.getElementById('employeid').addEventListener('change', function() {
+        document.getElementById('employeeForm').submit();
+    });
+</script>
+{% endblock content %}
+

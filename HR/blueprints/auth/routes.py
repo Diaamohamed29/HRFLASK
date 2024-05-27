@@ -1,6 +1,7 @@
 from flask import request , render_template , redirect , url_for , Blueprint,session,flash
 from HR.blueprints.user.routes import user
 from HR.blueprints.admin.routes import admin
+from HR.blueprints.super.routes import super
 from HR.db import connection,cursor
 auth = Blueprint("auth", __name__, template_folder="templates")
 
@@ -29,6 +30,10 @@ def login():
                 session['username'] = username
                 flash('Logged in successfullly','success')
                 return redirect(url_for('admin.index'))
+            if account[0] =='super' and account[1]=='super':
+                session['username'] = username 
+                flash ('Logged In Successfully','success')
+                return redirect(url_for('super.index'))
             if account[0] == username and account[1] == password:
                 session['username'] = username
                 flash('Logged in successfullly','success')
