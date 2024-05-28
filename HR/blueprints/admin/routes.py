@@ -128,7 +128,7 @@ def view_employes():
 
             select employe_id , name , department , job_role ,
                     qualification , national_id , address , telephone , hire_date ,
-                   net_salary , allowance,social_insurance from employes """)
+                   net_salary , allowance,social_insurance from employes order by employe_id """)
     results = cursor.fetchall()
     return render_template('admin/view_employes.html',number=number,results=results)
 
@@ -205,7 +205,8 @@ def vacation_requests():
                 """, (employe_id, date))
                 connection.commit()
                 flash("Vacation request accepted successfully!", "success")
-
+                cursor.execute("EXEC UpdateVacationRequestsInHeadAttendance")
+                connection.commit()
             elif action == 'reject':
                 cursor.execute(""" 
                     UPDATE vacation_requests
@@ -286,6 +287,8 @@ def add_vacation():
 
             """)
             connection.commit()
+            cursor.execute("EXEC UpdateVacationRequestsInHeadAttendance")
+            connection.commit()
             cursor.close()
 
             flash('Vacation request added successfully!', 'success')
@@ -344,8 +347,11 @@ def add_mission_page():
                                 job_role = (select job_role from employes where employe_id = missions.employe_id)
                 """)
             connection.commit()
-            flash('Mission added successfully!', 'success')  # Flash success message
-            return redirect(url_for('admin.add_mission_page'))  # Redirect to the same page after adding the mission
+            flash('Mission added successfully!', 'success')# Flash success message
+            cursor.execute("EXEC UpdateMissionsInHeadAttendance") 
+            connection.commit() 
+            return redirect(url_for('admin.add_mission_page')) 
+         # Redirect to the same page after adding the mission
         except Exception as e:
             connection.rollback()  # Rollback the transaction if an error occurs
             return f"Error: {e}"
@@ -354,9 +360,32 @@ def add_mission_page():
 
 
 
-@admin.route('/all_missions')
-def view_missions():
-    return render_template('admin/all_missions.html')
+@admin.route('/all_missions',methods=['POST','GET'])
+def all_missions():
+    cursor.execute("SELECT DISTINCT employe_id from missions")
+    all_employes = cursor.fetchall()
+    all_employes = [emp[0] for emp in all_employes]
+    return render_template('admin/all_missions.html',all_employes=all_employes)
+
+@admin.route('/submit_missions',methods=['POST'])
+def submit_missions():
+    cursor.execute("SELECT DISTINCT employe_id from missions")
+    all_employes = cursor.fetchall()
+    all_employes = [emp[0] for emp in all_employes]
+    
+
+    
+    employe_id = request.form['employeid']
+    print(employe_id)
+    from_date = request.form['fromDate']
+    to_date = request.form['toDate']
+
+    if employe_id == 'all':
+        cursor.execute('SELECT employe_id, date, from_time, to_time , reason FROM missions WHERE date BETWEEN ? AND ? ', (from_date, to_date))
+    else:
+        cursor.execute('SELECT employe_id, date, from_time, to_time , reason FROM missions WHERE employe_id = ? AND date BETWEEN ? AND ? ', (employe_id, from_date, to_date))
+    results = cursor.fetchall()
+    return render_template('admin/all_missions.html',results=results,all_employes=all_employes)
 
 
 @admin.route('/mission_requests',methods=["POST","GET"])
@@ -375,7 +404,8 @@ def mission_requests():
                 """, (employe_id, date))
                 connection.commit()
                 flash("Mission request accepted successfully!", "success")
-
+                cursor.execute("EXEC UpdateMissionsInHeadAttendance")
+                connection.commit()
             elif action == 'reject':
                 cursor.execute(""" 
                     UPDATE missions
@@ -603,7 +633,7 @@ def head_salaries():
 
     cursor.execute(""" 
             select employe_id , name , department , job_role , net_salary  ,
-                   allowance , total_net_salary from salaries 
+                   allowance , total_net_salary from salaries order by employe_id
             """)
     results = cursor.fetchall()
     return render_template('admin/head_salaries.html',results=results)
@@ -612,10 +642,10 @@ def head_salaries():
 @admin.route('/month_salary')
 def month_salary():
     cursor.execute(""" 
-        select * from head_payroll
+        select * from head_payroll order by employe_id 
         """)
     results = cursor.fetchall()
-    return render_template('admin/month_salary.html',results=results)
+    return render_template('admin/month_salary.html',results=results,cursor=cursor)
 
 
 
@@ -667,7 +697,7 @@ def update_deductions():
 @admin.route('/deductions')
 def deduction():
     cursor.execute(""" 
-    select * from month_deductions     
+    select * from month_deductions  order by employe_id   
     """)
     results = cursor.fetchall()
     return render_template('admin/deductions.html',results=results)
@@ -721,7 +751,7 @@ def update_administrative():
 @admin.route('/administrative_cuts')
 def administrative_cuts():
     cursor.execute(""" 
-            select * from month_administrative
+            select * from month_administrative order by employe_id
             """)
     results = cursor.fetchall()
     return render_template('admin/administrative.html',results=results)
@@ -777,9 +807,9 @@ def update_loans_insurance():
 
 @admin.route('/loans_insurance')
 def loans_insurance():
-    # cursor.execute("select * from month_loans_insurance")
-    # results = cursor.fetchall()
-    return render_template('admin/loans_insurance.html')
+    cursor.execute("select * from month_loans_insurance order by employe_id")
+    results = cursor.fetchall()
+    return render_template('admin/loans_insurance.html',results=results)
 
 
 
@@ -819,6 +849,8 @@ def add_extra_days():
                 """)
             connection.commit()
             flash('extra Day added successfully!', 'success')  # Flash success message
+            cursor.execute("EXEC UpdateExtraDaysInHeadAttendance")
+            connection.commit()
             return redirect(url_for('admin.extra_days'))  # Redirect to the same page after adding the mission
         except Exception as e:
             connection.rollback()  # Rollback the transaction if an error occurs

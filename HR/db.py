@@ -5,12 +5,12 @@ from sqlalchemy import create_engine
 from datetime import datetime, timedelta
 from zk.exception import ZKNetworkError
 
-connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-P1V3K1G;DATABASE=HR;Trusted_Connection=yes;')
+connection = pyodbc.connect('DRIVER={SQL SERVER};SERVER=DESKTOP-P1V3K1G;DATABASE=Final_HR;Trusted_Connection=yes;')
 cursor = connection.cursor()
 
 def connect_to_zkteco():
     try:
-        DB = {'servername': 'DESKTOP-P1V3K1G', 'database': 'HR', 'driver': 'driver=SQL Server Native Client 11.0'}
+        DB = {'servername': 'DESKTOP-P1V3K1G', 'database': 'Final_HR', 'driver': 'driver=SQL Server Native Client 11.0'}
         engine = create_engine('mssql+pyodbc://' + DB['servername'] + '/' + DB['database'] + "?" + DB['driver'])
         
         zk = ZK('192.168.1.208', port=4370, timeout=5)
@@ -190,31 +190,33 @@ def connect_to_zkteco():
 def head_attendance():
 
 
-    # Get current date and time
-    current_datetime = datetime.now()
+#     # Get current date and time
+#     current_datetime = datetime.now()
 
-    # Extract current year, month, and day
-    current_year = current_datetime.year
-    current_month = current_datetime.month
-    current_day = current_datetime.day
+#     # Extract current year, month, and day
+#     current_year = current_datetime.year
+#     current_month = current_datetime.month
+#     current_day = current_datetime.day
 
-    # Set start date to the 26th of the previous month
-    start_date = datetime(current_year, current_month, 26) - timedelta(days=30)
+#     # Set start date to the 26th of the previous month
+#     start_date = datetime(current_year, current_month, 26) - timedelta(days=30)
 
-    # Set end date to the 25th of the current month
-    end_date = datetime(current_year, current_month, 25)
+#     # Set end date to the 25th of the current month
+#     end_date = datetime(current_year, current_month, 25)
 
-# Adjust start and end dates if the current day is after the 25th
-    if current_day >= 26:
-        start_date = datetime(current_year, current_month, 26)
-        end_date = start_date + timedelta(days=30)
-
+# # Adjust start and end dates if the current day is after the 25th
+#     if current_day >= 26:
+#         start_date = datetime(current_year, current_month, 26)
+#         end_date = start_date + timedelta(days=30)
+    start_date = '2024-04-26'
+    end_date = '2024-05-25'
     cursor.execute("EXEC InsertValuesIntoHeadAttendance ?, ?",(start_date,end_date))
     cursor.execute("EXEC UpdateVacationRequestsInHeadAttendance")
     cursor.execute("EXEC UpdateMissionsInHeadAttendance")
-    # cursor.execute("EXEC UpdateExtraDaysInHeadAttendance")
-    # cursor.execute("EXEC UpdateCheckPerInHeadAttendance")
-
+    cursor.execute("EXEC UpdateExtraDaysInHeadAttendance")
+    cursor.execute("EXEC UpdateCheckPerInHeadAttendance")
+    cursor.execute("EXEC UpdateTotalRowsInHeadAttendance")
+    cursor.execute("EXEC UpdateLateColumnInMonthDeductions")
     connection.commit()
 
 
@@ -222,13 +224,17 @@ def head_payroll():
     cursor.execute("EXEC InsertIntoHeadPayroll")
     cursor.execute("EXEC UpdateExtraHoursInHeadPayroll")
     cursor.execute("EXEC UpdateExtraHoursValueInHeadPayroll")
-    cursor.execute("EXEC UpdateHeadPayroll")
-
-
+    cursor.execute("EXEC UpdateHeadPayrollFromMonthDeductions")
+    cursor.execute("EXEC UpdateHeadPayrollFromMonthAdministrative")
+    cursor.execute("EXEC UpdateHeadPayrollFromMonthLoansInsurance")
+    cursor.execute("EXEC UpdateHeadPayrollExtra_days")
+    cursor.execute("EXEC UpdateExtraHoursValueInHeadPayroll")
+    cursor.execute("EXEC UpdateHeadPayrollTotalSalary")
+    cursor.execute("EXEC UpdateHeadPayrollInt")
     connection.commit()
 
 
 # connect_to_zkteco()
 # head_attendance()
-# head_payroll()
+head_payroll()
 

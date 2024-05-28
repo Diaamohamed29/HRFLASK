@@ -1,18 +1,55 @@
-<!-- upload.html -->
-
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container text-center logo-container">
-    <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
-    
+<head>
+    <style>
+        body {
+            background-color: #ffeed6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-    <form action="" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="pdf_file">Upload PDF File</label>
-            <input type="file" class="form-control-file" id="pdf_file" name="pdf_file" multiple>
-        </div>
-        <button type="submit" class="btn btn-success">Upload</button>
-    </form>
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo {
+            width: 200px;
+            height: auto;
+        }
+
+        .form-container {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .welcome-text {
+            font-size: 36px;
+            color: #333;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<div class="logo-container">
+    <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
+    <div class="form-container">
+        <form action="" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class='welcome-text'for="pdf_file">Upload PDF File</label>
+                <input type="file" class="form-control-file" id="pdf_file" name="pdf_file" multiple>
+            </div>
+            <button type="submit" class="btn btn-success">Upload</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

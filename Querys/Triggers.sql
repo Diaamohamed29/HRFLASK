@@ -37,7 +37,6 @@ BEGIN
 	where employe_id in (select employe_id from deleted);
 
 
-	
 
 
 
@@ -100,6 +99,36 @@ END;
 GO
 
 
+CREATE TRIGGER updateVacationsDays 
+on vacation_requests
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    -- Update for new inserts
+    IF EXISTS (SELECT 1 FROM INSERTED WHERE status = 1)
+    BEGIN
+        UPDATE v
+        SET 
+            v.normal_days = v.normal_days - ISNULL(avd.used_normal_days, 0),
+            v.casual_days = v.casual_days - ISNULL(avd.used_casual_days, 0)
+        FROM 
+            vacations v
+        INNER JOIN 
+            (
+                SELECT 
+                    employe_id,
+                    SUM(CASE WHEN vac_type = 'normal' THEN no_of_days ELSE 0 END) AS used_normal_days,
+                    SUM(CASE WHEN vac_type = 'casual' THEN no_of_days ELSE 0 END) AS used_casual_days
+                FROM 
+                    INSERTED
+                WHERE 
+                    status = 1
+                GROUP BY 
+                    employe_id
+            ) AS avd ON v.employe_id = avd.employe_id;
+    END
+
+END;
 
 
 

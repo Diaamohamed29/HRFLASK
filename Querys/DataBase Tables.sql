@@ -65,28 +65,6 @@ create table vacation_requests(employe_id int ,
  status int)
 
 
--- month report table 
-create table month_report(employe_id int ,
-name nvarchar(max) , 
-date date ,
-day varchar(50) ,
-check_in time ,
-check_out time ,
-check_in_per int DEFAULT 0 ,
-check_out_per int DEFAULT 0 ,
-check_extra_hours int DEFAULT 0 ,
-check_extra_minutes int DEFAULT 0 ,
-total_extra AS (
-        CAST(
-            CASE 
-                WHEN check_extra_minutes >= 60 THEN check_extra_minutes / 60.0
-                ELSE check_extra_minutes * 1.0 / 60
-            END AS DECIMAL(10,2)
-			)),
-check_vacation int DEFAULT 0 ,
-check_mission int DEFAULT 0,
-check_per int DEFAULT 0 ) ;
-
 
 
 
@@ -126,33 +104,6 @@ extra_hours_rate decimal (10,2) default 1.2 ,
 
 
 
--- current_month function and table
-
-CREATE FUNCTION dbo.GetCheckPerSum(@employe_id INT)
-RETURNS INT
-AS
-BEGIN
-    DECLARE @sum INT;
-
-    SELECT @sum = SUM(check_per)
-    FROM current_month_report
-    WHERE employe_id = @employe_id;
-
-    RETURN @sum;
-END;
-CREATE TABLE current_month_report (
-    employe_id INT,
-    name NVARCHAR(MAX),
-    date DATE,
-    day NVARCHAR(MAX),
-    check_in TIME,
-    check_out TIME,
-    total_extra DECIMAL(10, 2) DEFAULT 0,
-    check_vacation INT DEFAULT 0,
-    check_mission INT DEFAULT 0,
-    check_per INT DEFAULT 0,
-    check_per_sum AS (dbo.GetCheckPerSum(employe_id))
-);
 
 
 
@@ -180,7 +131,6 @@ OPTION (MAXRECURSION 0);
 
 
 
-
 create table head_attendance (employe_id int , 
 						name nvarchar(max) , 
 						job_role nvarchar(max), 
@@ -193,7 +143,8 @@ create table head_attendance (employe_id int ,
 						extra_hours decimal (10,2) default 0 , 
 						check_vacation decimal (10,2) default 0 , 
 						check_mission decimal (10,2) default 0,
-							check_per decimal (10,2) default 0)
+							check_per decimal (10,2) default 0,
+							check_extra_day decimal (10,2) default 0 )
 
 create table head_payroll (employe_id int , 
 							name nvarchar(max) , 
@@ -218,6 +169,8 @@ create table head_payroll (employe_id int ,
 							social_insurance real default 0 , 
 							labor_box real default 0, 
 							suspended real default 0,
+							extra_days decimal (10,2) default 0 ,
+							extra_days_value decimal (10,2) default 0,
 							total_net_salary real , 
 							payment_way nvarchar(max) )
 							 
@@ -229,3 +182,11 @@ create table month_loans_insurance (employe_id int ,
 									social_insurance real default 0 , 
 									labor_box real default 0,
 									suspended real default 0 )
+CREATE TABLE month_extra_days (employe_id int , 
+								name nvarchar(max) ,
+								department nvarchar(max) , 
+								job_role nvarchar(max) , 
+								date date , 
+								extra_days decimal (10,2) default 0 ,
+								reason nvarchar (max) , 
+								status int default 0)
