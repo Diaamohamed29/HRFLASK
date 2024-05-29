@@ -46,3 +46,4 @@ def head_payroll():
     cursor.execute('select * from head_payroll')
     results = cursor.fetchall()
     return render_template('super/head_payroll.html',results=results,cursor=cursor)
+

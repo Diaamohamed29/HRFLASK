@@ -1,4 +1,4 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 
 {% block content %}
 {% set filename = 'salaries.xlsx' %}
@@ -90,12 +90,12 @@
         table-layout: auto;
     }
 
-    th, td , tr {
-        padding: 15px; /* Increased padding for better spacing */
+    th, td, tr {
+        padding: 15px;
         text-align: center;
         border-bottom: 1px solid #ddd;
-        font-size: 20px; /* Increased font size */
-        font-weight: bold; 
+        font-size: 20px;
+        font-weight: bold;
         white-space: nowrap;
         border-right: 1px solid black;
     }
@@ -113,58 +113,54 @@
     }
 
     tbody tr:hover {
-        background-color: #ddd; /* Highlight row on hover */
+        background-color: #ddd;
     }
-
-
 </style>
-<div class=" text-center logo-container">
+<div class="text-center logo-container">
     <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
     <h1 style="margin-bottom:30px"></h1>
 </div>
 
 {% if results %}
 <table id="data-table">
-  <thead>
-    <tr>
-        <!-- Updated column names -->
-        <th>الرقم الوظيفي</th>
-        <th>الاسم</th>
-        <th>الوظيفة</th>
-        <th>المرتب</th>
-        <th>بدلات</th>
-        <th>ساعات اضافية</th>
-        <th>الاضافي</th>
-        <th>اجمالي المرتب</th>
-        <th>ايام بالخصم</th>
-        <th>اجازة</th>
-        <th>غياب</th>
-        <th>تأخير</th>
-        <th>اجمالي الاستقطاعات</th>
-        <th>قيمة الاستقطاعات</th>
-        <th>الصافي</th>
-        <th>قيمة جزاء غياب</th>
-        <th>جزاء اداري</th>
-        <th>قيمة جزاء اداري</th>
-        <th>خصومات</th>
-        <th>سلف</th>
-        <th>التأمينات الاجتماعية</th>
-        <th>صندوق مكتب العمل</th>
-        <th>موقوف</th>
-        <th>ايام اضافية</th>
-        <th>قيمة الايام الاضافية</th>
-        <th>صافي المستحق</th>
-        <th>طريقة القبض</th>
-        <!-- Add more column names as needed -->
-    </tr>
-</thead>
+    <thead>
+        <tr>
+            <th>الرقم الوظيفي</th>
+            <th>الاسم</th>
+            <th>الوظيفة</th>
+            <th>المرتب</th>
+            <th>بدلات</th>
+            <th>ساعات اضافية</th>
+            <th>الاضافي</th>
+            <th>اجمالي المرتب</th>
+            <th>ايام بالخصم</th>
+            <th>اجازة</th>
+            <th>غياب</th>
+            <th>تأخير</th>
+            <th>اجمالي الاستقطاعات</th>
+            <th>قيمة الاستقطاعات</th>
+            <th>الصافي</th>
+            <th>قيمة جزاء غياب</th>
+            <th>جزاء اداري</th>
+            <th>قيمة جزاء اداري</th>
+            <th>خصومات</th>
+            <th>سلف</th>
+            <th>التأمينات الاجتماعية</th>
+            <th>صندوق مكتب العمل</th>
+            <th>موقوف</th>
+            <th>ايام اضافية</th>
+            <th>قيمة الايام الاضافية</th>
+            <th>صافي المستحق</th>
+            <th>طريقة القبض</th>
+        </tr>
+    </thead>
     <tbody>
         {% for row in results %}
-            <tr>
-                {% for value in row %}
-                    <td>{{ value }}</td>
-                {% endfor %}
-            </tr>
+        <tr>
+            {% for value in row %}
+            <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
         {% endfor %}
     </tbody>
 </table>
@@ -172,59 +168,65 @@
 <p>No data available</p>
 {% endif %}
 <div class="text-center mt-5">
-  <button id="exportBtn" class="btn btn-success">تصدير إلى Excel</button>
+    <button id="exportBtn" class="btn btn-success">تصدير إلى Excel</button>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx-style/0.8.13/jszip.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx-style/0.8.13/xlsx.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <script>
-    // JavaScript to dynamically adjust column widths based on content
-    function adjustColumnWidths() {
-        var table = document.getElementById('data-table');
-        var colCount = table.rows[0].cells.length;
+document.getElementById('exportBtn').addEventListener('click', function() {
+    var table = document.getElementById('data-table');
+    var ws = XLSX.utils.table_to_sheet(table);
 
-        for (var i = 0; i < colCount; i++) {
-            var maxWidth = 0;
-            for (var j = 0; j < table.rows.length; j++) {
-                var cell = table.rows[j].cells[i];
-                var textWidth = cell.clientWidth;
-                maxWidth = Math.max(maxWidth, textWidth);
-            }
-            table.rows[0].cells[i].style.width = maxWidth + 'px';
+    // Apply styles to header row
+    var headerCellStyle = {
+        font: { bold: true, sz: 14 },
+        fill: { fgColor: { rgb: '8b9474' } },
+        alignment: { horizontal: 'center' },
+        border: { bottom: { style: 'thin', color: { rgb: '000000' } } }
+    };
+    for (var i = 0; i < table.rows[0].cells.length; i++) {
+        var cellAddress = XLSX.utils.encode_cell({ r: 0, c: i });
+        ws[cellAddress].s = headerCellStyle;
+    }
+
+    // Apply styles to data rows
+    var dataCellStyle = {
+        font: { sz: 12 },
+        alignment: { horizontal: 'center' },
+        border: { bottom: { style: 'thin', color: { rgb: '000000' } } }
+    };
+    for (var r = 1; r < table.rows.length; r++) {
+        for (var c = 0; c < table.rows[r].cells.length; c++) {
+            var cellAddress = XLSX.utils.encode_cell({ r: r, c: c });
+            ws[cellAddress].s = dataCellStyle;
         }
     }
 
-    // Call the function after the table is loaded or resized
-    window.addEventListener('DOMContentLoaded', adjustColumnWidths);
-    window.addEventListener('resize', adjustColumnWidths);
-
-    // Export table to Excel with styles
-    document.getElementById('exportBtn').addEventListener('click', function() {
-        var wb = XLSX.utils.table_to_book(document.getElementById('data-table'), {sheet: 'Sheet1'});
-
-        // Add styles to the worksheet
-        var ws = wb.Sheets['Sheet1'];
-        var wscols = [];
-        for (var i = 0; i < ws['!ref'].split(':')[1].charCodeAt(0) - 64; i++) {
-            wscols.push({wpx: 150}); // Set the width of each column (adjust as needed)
-        }
-        ws['!cols'] = wscols;
-
-        // Generate Excel file with styles
-        var wbout = XLSXStyle.write(wb, {bookType: 'xlsx', bookSST: true, type: 'binary'});
-
-        // Save the Excel file
-        saveAs(new Blob([s2ab(wbout)], {type: "application/octet-stream"}), "{{ filename }}");
-    });
-
-    // Convert string to ArrayBuffer
-    function s2ab(s) {
-        var buf = new ArrayBuffer(s.length);
-        var view = new Uint8Array(buf);
-        for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
-        return buf;
+    // Set column widths
+    var wscols = [];
+    for (var k = 0; k < table.rows[0].cells.length; k++) {
+        wscols.push({ wpx: 150 });
     }
+    ws['!cols'] = wscols;
+
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    // Generate Excel file
+    var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+
+    // Save the Excel file
+    saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), "{{ filename }}");
+});
+
+// Convert string to ArrayBuffer
+function s2ab(s) {
+    var buf = new ArrayBuffer(s.length);
+    var view = new Uint8Array(buf);
+    for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+    return buf;
+}
+
 </script>
 
 {% endblock content %}

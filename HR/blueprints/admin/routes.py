@@ -1,12 +1,13 @@
-from flask import request , render_template , redirect , url_for , Blueprint,session,jsonify,flash
+from flask import request , render_template , redirect , url_for , Blueprint,session,jsonify,flash,send_file
 from HR.db import connection , cursor ,connect_to_zkteco
 from zk.exception import ZKNetworkError
 from datetime import datetime , timedelta
 import fitz
 import os 
 from flask import current_app
-
-
+from io import BytesIO
+import openpyxl
+import pandas as pd 
 
 
 
@@ -866,4 +867,3 @@ def extra_days():
     all_employes = [emp[0] for emp in cursor.fetchall()]
     return render_template('admin/extra_days.html',all_employes=all_employes)
 
-### END SALARIES PAGE ###
