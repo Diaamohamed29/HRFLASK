@@ -2,42 +2,61 @@
 
 {% block content %}
 <style>
+    body {
+        background-color: #ffeed6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
     .container-tables {
         display: grid;
-        grid-template-columns: 75% 25%;; /* Two columns */
+        grid-template-columns: 75% 25%; /* Default for the first row */
         gap: 10px; /* Add some space between tables */
         max-width: 100%; /* Make the container take the width of the page */
         overflow-x: auto; /* Add horizontal scroll if needed */
+    }
+
+    /* Specific styling for the second row */
+    .table-row-2 {
+        grid-template-columns: 50% 50%;
     }
 
     .container-tables .table-wrapper {
         overflow-y: auto; /* Add vertical scroll if needed */
     }
 
+    /* Table styles */
     table {
+        width: 100%;
         border-collapse: collapse;
-        border: 1px solid #ddd;
-        width: 100%; /* Make tables fill the entire column by default */
+        margin-top: 30px;
+        table-layout: auto;
     }
 
-    th,
-    td {
-        padding: 10px; /* Increase padding for better readability */
-        text-align: left;
-        font-size: 20px; /* Adjust font size to 20px */
-        border: 1px solid #ddd; /* Add border with solid style */
+    th, td , tr {
+        padding: 15px; /* Increased padding for better spacing */
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+        font-size: 20px; /* Increased font size */
+        font-weight: bold; 
+        white-space: nowrap;
+        border-right: 1px solid black;
     }
 
     th {
-        background-color: #f2f2f2;
+        background-color: #8b9474;
+        color: #fff;
+        font-size: 18px;
+        text-transform: uppercase;
         font-weight: bold;
-        font-size: 16px; /* Increase font size of header to 16px */
-        color: #333; /* Header text color */
     }
 
-    td {
-        background-color: #fff; /* Body background color */
-        color: #555; /* Body text color */
+    tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tbody tr:hover {
+        background-color: #ddd; /* Highlight row on hover */
     }
 
     caption {
@@ -160,8 +179,6 @@
 </div>
 
 <div class="container-tables table-row-2">
-
-
     <div class="table-wrapper">
         <!-- Table 3 -->
         <table id="table-3">
@@ -188,7 +205,6 @@
             </tbody>
         </table>
     </div>
-
 
     <div class="table-wrapper">
         <!-- Table 1 -->
@@ -217,7 +233,7 @@
         </table>
     </div>
 </div>
-<button class="next-button">Next</button>
+<a href=head_payroll><button class="next-button">Next</button></a>
 </div>
 <script>
     // JavaScript to automatically submit the form when employee ID is selected
@@ -226,4 +242,3 @@
     });
 </script>
 {% endblock content %}
-

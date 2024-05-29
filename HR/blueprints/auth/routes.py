@@ -3,7 +3,7 @@ from HR.blueprints.user.routes import user
 from HR.blueprints.admin.routes import admin
 from HR.blueprints.super.routes import super
 from HR.db import connection,cursor
-auth = Blueprint("auth", __name__, template_folder="templates")
+auth = Blueprint("auth", __name__, template_folder="templates",static_folder='')
 
 
 
