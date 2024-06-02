@@ -18,7 +18,7 @@ def index():
         all_employes = [emp[0] for emp in cursor.fetchall()]
         
         employe_id = request.form['employeid']
-        cursor.execute(""" SELECT name , date , from_time , to_time , reason  
+        cursor.execute(""" SELECT name , date , ISNULL(CONVERT(varchar, from_time, 108), '') AS from_time , ISNULL(CONVERT(varchar, to_time, 108), '') AS to_time , reason  
                        FROM missions WHERE status = 1 and employe_id = ?""", (employe_id,))
         missions_data = cursor.fetchall()
 
@@ -29,10 +29,15 @@ def index():
         cursor.execute("select * from vacations where employe_id = ?",(employe_id))
         vacations = cursor.fetchall()
 
-        cursor.execute("""select name , day , date , check_in , check_out , extra_hours , 
-                       check_vacation, check_mission , check_per
-                        from head_attendance 
-                       where employe_id = ?""",(employe_id))
+        cursor.execute("""SELECT name, day, date,   ISNULL(CONVERT(varchar, check_in, 108), '') AS check_in, 
+                         ISNULL(CONVERT(varchar, check_out, 108), '') AS check_out
+                       , extra_hours, 
+       check_vacation, check_mission, check_per
+FROM head_attendance
+WHERE employe_id = ?
+ORDER BY 
+    CASE WHEN name = 'Total' THEN 1 ELSE 0 END,  -- Sort 'total' row last
+    date;""",(employe_id))
         attendance_data = cursor.fetchall()
 
 

@@ -34,38 +34,47 @@
     </div>
 </div>
 
-
-
-
 <script>
     // Get all slideshow images
     var images = document.querySelectorAll('.slideshow-img');
 
-    // Initialize index for current image
-    var currentIndex = 0;
+    // If there are no images, refresh the page every 5 seconds
+    if (images.length === 0) {
+        setInterval(function() {
+            location.reload();
+        }, 5000);
+    } else {
+        // Initialize index for current image
+        var currentIndex = 0;
 
-    // Function to show the next image
-    function showNextImage() {
-        // Hide the current image
-        images[currentIndex].style.display = 'none';
+        // Function to show the next image
+        function showNextImage() {
+            // Hide the current image
+            images[currentIndex].style.display = 'none';
 
-        // Increment index to show the next image
-        currentIndex = (currentIndex + 1) % images.length;
+            // Increment index to show the next image
+            currentIndex = (currentIndex + 1) % images.length;
 
-        // Show the next image
-        images[currentIndex].style.display = 'block';
+            // If it's the last image, refresh the page
+            if (currentIndex === 0) {
+                location.reload();
+            } else {
+                // Show the next image
+                images[currentIndex].style.display = 'block';
+            }
+        }
+
+        // Function to start the slideshow
+        function startSlideshow() {
+            // Show the first image
+            images[currentIndex].style.display = 'block';
+
+            // Set interval to switch images every 5 seconds
+            setInterval(showNextImage, 5000);
+        }
+
+        // Start the slideshow when the page loads
+        window.onload = startSlideshow;
     }
-
-    // Function to start the slideshow
-    function startSlideshow() {
-        // Show the first image
-        images[currentIndex].style.display = 'block';
-
-        // Set interval to switch images every 5 seconds
-        setInterval(showNextImage, 5000);
-    }
-
-    // Start the slideshow when the page loads
-    window.onload = startSlideshow;
 </script>
 {% endblock content %}

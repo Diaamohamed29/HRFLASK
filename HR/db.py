@@ -170,7 +170,7 @@ def connect_to_zkteco():
             CASE 
                 WHEN employe_id IN (146, 120, 507, 498) and day != 'Friday' and day != 'Saturday' THEN
                     CASE 
-                        WHEN check_out BETWEEN '17:15:00' AND '23:59:00' THEN DATEDIFF(MINUTE, '17:00:00', check_out)
+                        WHEN check_out BETWEEN '17:14:00' AND '23:59:00' THEN DATEDIFF(MINUTE, '17:00:00', check_out)
                         ELSE 0
                     END
                 WHEN employe_id IN (273, 470) and day != 'Friday' and day != 'Saturday' THEN
@@ -236,5 +236,5 @@ def head_payroll():
 
 # connect_to_zkteco()
 # head_attendance()
-head_payroll()
+# head_payroll()
 

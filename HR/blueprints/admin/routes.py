@@ -484,18 +484,57 @@ def pdf_to_images(pdf_path, output_folder):
     pdf_document.close()
 
     return image_filenames
-@admin.route('/upload_success')
+
+
+@admin.route('/delete_file', methods=['POST'])
+def delete_file():
+    if request.method == 'POST':
+        filename = request.form.get('filename')
+
+        if filename:
+            upload_folder = current_app.config.get('UPLOAD_FOLDER')
+            file_path = os.path.join(upload_folder, filename)
+
+            # Check if the file exists
+            if os.path.exists(file_path):
+                # Delete the file
+                os.remove(file_path)
+                flash(f"File '{filename}' deleted successfully!", "success")
+
+                # Delete corresponding image if it exists
+                image_path = os.path.join(upload_folder, 'uploads', filename)
+                if os.path.exists(image_path):
+                    os.remove(image_path)
+                    flash(f"Image corresponding to file '{filename}' deleted successfully!", "success")
+                else:
+                    flash(f"Image corresponding to file '{filename}' not found!", "error")
+            else:
+                flash(f"File '{filename}' not found!", "error")
+    # Redirect back to the reports page after deletion
+    return redirect(url_for('admin.reports'))
+
 def upload_success():
     return render_template('admin/upload_success.html')
 ### REPORTS PAGES ###
-@admin.route('/reports',methods=['POST','GET'])
+@admin.route('/reports', methods=['POST', 'GET'])
 def reports():
+    uploaded_files = []
+
     if request.method == 'POST':
         pdf_file = request.files['pdf_file']
-        if pdf_file :
-            pdf_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'],pdf_file.filename))
-            return redirect(url_for('admin.upload_success'))
-    return render_template('admin/reports.html')
+        if pdf_file:
+            pdf_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], pdf_file.filename))
+            uploaded_files.append(pdf_file.filename)
+            flash("File uploaded successfully!", "success")  # Optional: Flash message for success
+            # After saving the file, redirect to the reports page to display the list of uploaded files
+            return redirect(url_for('admin.reports'))
+
+    # Get list of files in the upload folder
+    if 'UPLOAD_FOLDER' in current_app.config:
+        upload_folder = current_app.config['UPLOAD_FOLDER']
+        uploaded_files = [f for f in os.listdir(upload_folder) if os.path.isfile(os.path.join(upload_folder, f))]
+
+    return render_template('admin/reports.html', uploaded_files=uploaded_files)
 ### END REPORT PAGE ###
 
 
@@ -600,18 +639,23 @@ def update_salaries():
 @admin.route('/head_attendance')
 def head_attendance():
     cursor.execute(""" 
-        select employe_id , 
-                name , 
-                   job_role , 
-                   day , 
-                   date , 
-                   check_in , 
-                   check_out , 
-                   check_per , 
-                   extra_hours , 
-                   check_mission , 
-                   check_vacation
-                   From head_attendance where name != 'total' order by employe_id , date
+SELECT 
+    employe_id ,
+    name, 
+    job_role,
+    day, 
+    date, 
+    ISNULL(CONVERT(varchar, check_in, 108), '') AS check_in, 
+    ISNULL(CONVERT(varchar, check_out, 108), '') AS check_out, 
+    check_per, 
+    extra_hours, 
+    check_mission, 
+    check_vacation
+FROM 
+    head_attendance
+ORDER BY 
+    CASE WHEN name = 'Total' THEN 1 ELSE 0 END, 
+    date;
             """)
     results = cursor.fetchall()
     cursor.execute("""SELECT DISTINCT name FROM head_attendance where name != 'Total' """)
