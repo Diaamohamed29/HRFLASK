@@ -1,5 +1,5 @@
 from flask import request , render_template , redirect , url_for , Blueprint,session,jsonify,flash,send_file
-from HR.db import connection , cursor ,connect_to_zkteco
+from HR.db import connection , cursor ,connect_to_zkteco , head_attendance,head_payroll
 from zk.exception import ZKNetworkError
 from datetime import datetime , timedelta
 import fitz
@@ -583,7 +583,8 @@ def gaz():
 ### SALARIES PAGE ###
 @admin.route('/salaries')
 def salaries():
-    
+    head_attendance()
+    head_payroll()
 # Get current date information
     current_month = datetime.now().month
     current_year = datetime.now().year
@@ -638,6 +639,7 @@ def update_salaries():
 ## حضور وانصراف الشهر 
 @admin.route('/head_attendance')
 def head_attendance():
+    
     cursor.execute(""" 
 SELECT 
     employe_id ,

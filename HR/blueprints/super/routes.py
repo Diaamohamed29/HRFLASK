@@ -1,5 +1,5 @@
 from flask import request , render_template , redirect , url_for , Blueprint,session,jsonify,flash
-from HR.db import connection , cursor ,connect_to_zkteco
+from HR.db import connection , cursor ,connect_to_zkteco,head_attendance,head_payroll
 from datetime import datetime , timedelta
 
 
@@ -8,6 +8,33 @@ super = Blueprint("super", __name__, template_folder="templates",static_folder='
 
 @super.route('/', methods=['POST', 'GET'])
 def index():
+    connect_to_zkteco()
+    head_attendance()
+    head_payroll()
+
+    
+
+    # Get current date and time
+    current_datetime = datetime.now()
+
+    # Extract current year, month, and day
+    current_year = current_datetime.year
+    current_month = current_datetime.month
+    current_day = current_datetime.day
+
+    # Set start date to the 26th of the previous month
+    start_date = datetime(current_year, current_month, 26) - timedelta(days=30)
+
+    # Set end date to the 25th of the current month
+    end_date = datetime(current_year, current_month, 25)
+
+# Adjust start and end dates if the current day is after the 25th
+    if current_day >= 26:
+        start_date = datetime(current_year, current_month, 26)
+        end_date = start_date + timedelta(days=30)
+
+
+
     if request.method == 'GET':
         cursor.execute("SELECT employe_id FROM employes")
         all_employes = [emp[0] for emp in cursor.fetchall()]
@@ -19,11 +46,11 @@ def index():
         
         employe_id = request.form['employeid']
         cursor.execute(""" SELECT name , date , ISNULL(CONVERT(varchar, from_time, 108), '') AS from_time , ISNULL(CONVERT(varchar, to_time, 108), '') AS to_time , reason  
-                       FROM missions WHERE status = 1 and employe_id = ?""", (employe_id,))
+                       FROM missions WHERE status = 1 and employe_id = ? and date between ? and ? """, (employe_id,start_date,end_date))
         missions_data = cursor.fetchall()
 
         cursor.execute("""select name , date , from_date , to_date , no_of_days
-                         from vacation_requests where status = 1 and employe_id = ?""",(employe_id))
+                         from vacation_requests where status = 1 and employe_id = ? and date between ? and ? """,(employe_id,start_date,end_date))
         vacations_requests = cursor.fetchall()
 
         cursor.execute("select * from vacations where employe_id = ?",(employe_id))

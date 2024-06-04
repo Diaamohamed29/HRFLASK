@@ -190,26 +190,25 @@ def connect_to_zkteco():
 def head_attendance():
 
 
-#     # Get current date and time
-#     current_datetime = datetime.now()
+    # Get current date and time
+    current_datetime = datetime.now()
 
-#     # Extract current year, month, and day
-#     current_year = current_datetime.year
-#     current_month = current_datetime.month
-#     current_day = current_datetime.day
+    # Extract current year, month, and day
+    current_year = current_datetime.year
+    current_month = current_datetime.month
+    current_day = current_datetime.day
 
-#     # Set start date to the 26th of the previous month
-#     start_date = datetime(current_year, current_month, 26) - timedelta(days=30)
+    # Set start date to the 26th of the previous month
+    start_date = datetime(current_year, current_month, 26) - timedelta(days=30)
 
-#     # Set end date to the 25th of the current month
-#     end_date = datetime(current_year, current_month, 25)
+    # Set end date to the 25th of the current month
+    end_date = datetime(current_year, current_month, 25)
 
-# # Adjust start and end dates if the current day is after the 25th
-#     if current_day >= 26:
-#         start_date = datetime(current_year, current_month, 26)
-#         end_date = start_date + timedelta(days=30)
-    start_date = '2024-04-26'
-    end_date = '2024-05-25'
+# Adjust start and end dates if the current day is after the 25th
+    if current_day >= 26:
+        start_date = datetime(current_year, current_month, 26)
+        end_date = start_date + timedelta(days=30)
+
     cursor.execute("EXEC InsertValuesIntoHeadAttendance ?, ?",(start_date,end_date))
     cursor.execute("EXEC UpdateVacationRequestsInHeadAttendance")
     cursor.execute("EXEC UpdateMissionsInHeadAttendance")

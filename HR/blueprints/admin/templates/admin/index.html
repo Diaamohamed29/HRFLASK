@@ -2,113 +2,10 @@
 
 {% block content %}
 
-<!-- Custom CSS -->
-
-<!-- Custom CSS -->
 <head>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
-
-<style>
-body {
-  background-color: #ffeed6;
-  font-family: 'Open Sans', sans-serif;
-}
-
-.container {
-  position: center;
-  height: 300px;
-  width: 1000px;
-  top: 60px;
-  left: calc(50% - 300px);
-  display: flex;
-}
-
-.admincard {
-    
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 500px;
-  width: 700px;
-  background-color: #ffeed6; /* Light grey or any other color that complements white */
-  border-radius: 10px;
-  box-shadow: -1rem 0 3rem #000;
-  transition: 0.4s ease-out;
-  position: relative;
-  left: 0px;
-}
-
-.admincard:not(:first-child) {
-    margin-left: -50px;
-}
-
-.admincard:hover {
-  transform: translateY(-20px) scale(1.1);
-  z-index: 1;
-  transition: 0.4s ease-out;
-}
-
-.admincard:hover ~ .card {
-  position: relative;
-  left: 50px;
-  transition: 0.4s ease-out;
-}
-
-.title {
-  color: black;
-  font-weight: 300;
-  position: absolute;
-  left: 20px;
-  top: 15px;
-}
-
-.bar {
-  position: absolute;
-  top: 100px;
-  left: 20px;
-  height: 5px;
-  width: 150px;
-}
-
-.emptybar {
-  background-color: #2e3033;
-  width: 100%;
-  height: 100%;
-}
-
-.filledbar {
-  position: absolute;
-  top: 0px;
-  z-index: 3;
-  width: 0px;
-  height: 100%;
-  background: rgb(0,154,217);
-  background: linear-gradient(90deg, rgba(0,154,217,1) 0%, rgba(217,147,0,1) 65%, rgba(255,186,0,1) 100%);
-  transition: 0.6s ease-out;
-}
-
-.admincard:hover .filledbar {
-  width: 120px;
-  transition: 0.4s ease-out;
-}
-
-.image {
-  width: 150px; /* Adjust image size as needed */
-  height: 150px; /* Adjust image size as needed */
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-.image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-</style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 
 
 <!-- Logo Section -->
@@ -118,7 +15,7 @@ body {
 </div>
 
 
-  <div class="container">
+  <div class="admin-container">
     <div class="admincard">
         <a href="employes">
       <h3 class="title"> <ion-icon name="people-outline"></ion-icon>الموظفين</h3>

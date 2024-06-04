@@ -96,6 +96,10 @@
     .next-button:hover {
         background-color: #45a049; /* Darker green background color on hover */
     }
+    .highlight-green {
+        background-color: green;
+        color: white;
+    }
 </style>
 
 
@@ -239,6 +243,18 @@
     // JavaScript to automatically submit the form when employee ID is selected
     document.getElementById('employeid').addEventListener('change', function() {
         document.getElementById('employeeForm').submit();
+    });
+     // JavaScript to highlight rows with 'Friday' or 'Saturday'
+     document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('#table-2 tbody tr');
+        rows.forEach(row => {
+            const dayCell = row.children[1];
+            const dayText = dayCell.textContent.trim().toLowerCase();
+            if (dayText === 'friday' || dayText === 'saturday') {
+                row.style.backgroundColor = 'yellow';
+                row.style.color = 'black';
+            }
+        });
     });
 </script>
 {% endblock content %}

@@ -1,87 +1,12 @@
 {% extends 'base.html'%}
 
 {% block content %}
+
+
 <head>
-<style>
-    body {
-        background-color: #ffeed6;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
-    .logo-container {
-        margin-top: 50px;
-    }
-
-    .logo {
-        width: 200px;
-        height: auto;
-    }
-
-    .welcome-text {
-        font-size: 36px;
-        color: #333;
-        margin-top: 30px;
-    }
-
-    .cardBox {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-        margin-top: 50px;
-        padding: 20px;
-        background-color: #ffeed6;
-    }
-
-    .card {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border-radius: 20px;
-        background-color: #FFFF;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        padding: 30px;
-        text-align: center;
-        transition: all 0.3s ease;
-        width: 300px;
-        height:400px;
-    }
-
-    .card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .cardName {
-        color: #007bff;
-        font-weight: bold;
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-
-    .numbers {
-        color: #555;
-        font-size: 20px;
-    }
-
-    .iconBx {
-        padding-top: 20px;
-    }
-
-    .logout-btn {
-        font-size: 20px;
-        margin-top: 50px;
-    }
-
-    .logout-btn:hover {
-        background-color: #dc3545;
-        border-color: #dc3545;
-    }
-
-</style>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 
 <div class="container text-center logo-container">
     <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
@@ -91,7 +16,7 @@
 <div class="cardBox">
     <div class="card">
         <div class="iconBx">
-            <ion-icon name="people-outline" style="font-size: 36px; color: #007bff;"></ion-icon>
+            <ion-icon name="people-outline" style="font-size: 36px; color: #3b2a86;"></ion-icon>
         </div>
         <div class="cardName">الرقم الوظيفي</div>
         <div class="numbers">{{username}}</div>
@@ -99,7 +24,7 @@
     <a href="attendance" style="text-decoration: none;">
         <div class="card">
             <div class="iconBx">
-                <ion-icon name="calendar" style="font-size: 36px; color: #007bff;"></ion-icon>
+                <ion-icon name="calendar" style="font-size: 36px; color: #3b2a86;"></ion-icon>
             </div>
             <div class="cardName">حضور وانصراف</div>
             <div class="numbers">{{current_month}} شهر</div>
@@ -108,7 +33,7 @@
     <a href="missions" style="text-decoration: none;">
         <div class="card">
             <div class="iconBx">
-                <ion-icon name="chatbubbles-outline" style="font-size: 36px; color: #007bff;"></ion-icon>
+                <ion-icon name="chatbubbles-outline" style="font-size: 36px; color: #3b2a86"></ion-icon>
             </div>
             <div class="cardName">مأموريات</div>
             <div class="numbers">{{current_month}} شهر</div>
@@ -117,7 +42,7 @@
     <a href="vacations" style="text-decoration: none;">
         <div class="card">
             <div class="iconBx">
-                <ion-icon name="airplane" style="font-size: 36px; color: #007bff;"></ion-icon>
+                <ion-icon name="airplane" style="font-size: 36px; color: #3b2a86;"></ion-icon>
             </div>
             <div class="cardName">أجازات</div>
             <div class="numbers">{{current_month}} شهر</div>

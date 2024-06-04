@@ -2,64 +2,13 @@
 
 {% block content %}
 
-<style>
-        body {
-        background-color:  #ffeed6;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
-    .logo-container {
-        margin-top: 50px;
-    }
-
-    .logo {
-        width: 200px;
-        height: 200px;
-        justify-content: center;
-    }
-
-    .container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-
-    .card {
-        width: 500px; /* Adjust the width here */
-        background-color: #ffeed6;;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        padding: 30px;
-    }
-
-    .card-title {
-        color: #333;
-        text-align: center;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    .input-group-text {
-        background-color: #007bff;
-        color: #fff;
-    }
-
-    .btn {
-        width: 100%;
-    }
-
-   
-</style>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
 
 <div class="container">
     <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="Logo" class="logo mb-4">
-    <div class="card">
+    <div class="add-vacation-card">
         <h4 class="card-title">طلب اجازة</h4>
         <form action="{{ url_for('user.add_vacation') }}" method="POST">
             <div class="form-group input-group">
@@ -125,7 +74,7 @@
             </div> <!-- form-group// -->
 
             <div class="form-group">
-                <button type="submit" class="btn btn-success btn-block">اضافة</button>
+                <button type="submit" class="btn-success btn-block">اضافة</button>
             </div> <!-- form-group// -->
         </form>
     </div>
