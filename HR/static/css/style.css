@@ -207,7 +207,19 @@ body {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         padding: 30px;
     }
-
+    .add-employe-card{
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        width: 500px;
+        height:600px; /* Adjust the width here */
+        background-color: white;;
+        border-radius: 10px;
+        box-shadow: 0 4p
+    }
+    .add-employe-card:hover {
+        transform: translateY(-10px) scale(1.05);
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.30);
+    }
+    
     .card-title {
         color: #333;
         text-align: center;

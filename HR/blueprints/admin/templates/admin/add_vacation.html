@@ -2,48 +2,9 @@
 
 {% block content %}
 <head>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
-
-<style>
-    body {
-        background-color: #ffeed6;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
-    .card {
-        background-color: #ffeed6; /* Lighter background color for the form */
-        border: none; /* Remove default border */
-        box-shadow: 0 0 40px rgba(0,0,0,0.1); /* Add shadow for depth */
-        border-radius:50px; /* Add border radius for rounded corners */
-    }
-
-    .card-title {
-        color: #333; /* Set color for the card title */
-    }
-
-    .form-control {
-        background-color: #fff; /* Set background color for form inputs */
-        border: none; /* Remove default input border */
-        border-radius: 5px; /* Add border radius for rounded corners */
-        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Add shadow for depth */
-    }
-
-    .btn {
-        background-color: #dc3545; /* Set background color for buttons */
-        color: #fff; /* Set text color for buttons */
-        border: none; /* Remove default button border */
-        border-radius: 5px; /* Add border radius for rounded corners */
-        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Add shadow for depth */
-    }
-
-    .btn:hover {
-        background-color: #c82333; /* Darker color on hover */
-    }
-</style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
+   
 
 <!-- Logo Section -->
 <div class=" text-center logo-container">
@@ -54,7 +15,7 @@
 
 
 <div class="container">
-    <div class="card ">
+    <div class="add-vacation-card ">
         <article class="card-body mx-auto" style="max-width: 400px;">
             <h4 class="card-title mt-3 text-center">طلب اجازة</h4>
             <form action="{{ url_for('admin.add_vacation') }}" method="POST">
